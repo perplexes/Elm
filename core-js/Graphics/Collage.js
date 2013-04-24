@@ -26,7 +26,7 @@ function textured(redo,ctx,src,points) {
     var img = new Image();
     img.src = JS.castStringToJSString(src);
     img.onload = redo;
- 
+
     tracePoints(ctx,points);
     ctx.fillStyle = ctx.createPattern(img,'repeat');
     ctx.fill();
@@ -124,16 +124,22 @@ function collageForms(w,h,forms) {
     var canvas = Render.newElement('canvas');
     w = ~~w;
     h = ~~h;
+    var dpr = 1;
+    if(window.devicePixelRatio) {
+      dpr = window.devicePixelRatio;
+    }
+
     canvas.style.width  = w + 'px';
     canvas.style.height = h + 'px';
     canvas.style.display = "block";
-    canvas.width  = w;
-    canvas.height = h;
+    canvas.width  = dpr * w;
+    canvas.height = dpr * h;
     if (canvas.getContext) {
-	var ctx = canvas.getContext('2d');
-	function redo() { renderForms(this,ctx,w,h,forms); }
-	renderForms(redo,ctx,w,h,forms);
-	return canvas;
+      var ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      function redo() { renderForms(this,ctx,w,h,forms); }
+      renderForms(redo,ctx,w,h,forms);
+      return canvas;
     }
     canvas.innerHTML = "Your browser does not support the canvas element.";
     return canvas;
