@@ -183,7 +183,7 @@ var Value = function(){
 	if (output.length === 0) return "{}";
 	return "{ " + output.join(", ") + " }";
     } else if (v[0]) {
-	if (v[0].substring(0,5) === "Tuple") {
+	if (v[0].substring && v[0].substring(0,5) === "Tuple") {
 	    var output = new Array(v.length-1);
 	    for (var i = v.length; --i; ) { output[i-1] = toString(v[i]); }
 	    return "(" + output.join(",") + ")";
