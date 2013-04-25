@@ -121,13 +121,10 @@ function renderForms(redo,ctx,w,h,forms) {
 }
 
 function collageForms(w,h,forms) {
-    var canvas = Render.newElement('canvas');
-    w = ~~w;
-    h = ~~h;
-    var dpr = 1;
-    if(window.devicePixelRatio) {
-      dpr = window.devicePixelRatio;
-    }
+    var canvas = Render.newElement('canvas'),
+        w = ~~w,
+        h = ~~h,
+        devicePixelRatio = window.devicePixelRatio || 1;
 
     if(window.webkitImageSmoothingEnabled) {
       window.webkitImageSmoothingEnabled = true;
@@ -136,13 +133,21 @@ function collageForms(w,h,forms) {
     canvas.style.width  = w + 'px';
     canvas.style.height = h + 'px';
     canvas.style.display = "block";
-    canvas.width  = dpr * w;
-    canvas.height = dpr * h;
     if (canvas.getContext) {
-      var ctx = canvas.getContext('2d');
-      ctx.scale(dpr, dpr);
-      function redo() { renderForms(this,ctx,w,h,forms); }
-      renderForms(redo,ctx,w,h,forms);
+      var context = canvas.getContext('2d'),
+          backingStoreRatio = context.webkitBackingStorePixelRatio ||
+                        context.mozBackingStorePixelRatio ||
+                        context.msBackingStorePixelRatio ||
+                        context.oBackingStorePixelRatio ||
+                        context.backingStorePixelRatio || 1,
+
+          ratio = devicePixelRatio / backingStoreRatio;
+
+      canvas.width  = ratio * w;
+      canvas.height = ratio * h;
+      context.scale(ratio, ratio);
+      function redo() { renderForms(this,context,w,h,forms); }
+      renderForms(redo,context,w,h,forms);
       return canvas;
     }
     canvas.innerHTML = "Your browser does not support the canvas element.";
