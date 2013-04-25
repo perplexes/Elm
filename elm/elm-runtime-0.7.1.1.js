@@ -7,51 +7,57 @@ var Guid = function() {
  return {guid : guid};
 }();
 Elm.JavaScript = function() {
+  function randInRange(min) { return function(max) {
+      return Math.floor(Math.random() * (max-min+1)) + min;
+    };
+  }
   function castJSBoolToBool(b) { return b; }
   function castBoolToJSBool(b) { return b; }
 
   function castJSNumberToFloat(n) { return n; }
   function castFloatToJSNumber(n) { return n; }
-  
+
   function castJSNumberToInt(n) { return ~~n; }
   function castIntToJSNumber(n) { return n; }
 
   function castJSElementToElement(w) {
     return function(h) {
       return function(node) {
-	return ["Element",Guid.guid(),
-		["EExternalHtml",node],
-		w,h,1,["Nothing"],["Nothing"]];
-      }
-    }
+        return [
+          "Element",Guid.guid(),
+          ["EExternalHtml",node],
+          w,h,1,["Nothing"],["Nothing"]
+        ];
+      };
+    };
   }
   function castElementToJSElement(elem) { return Render.render(elem); }
 
   function castJSArrayToList(arr) {
       var list = ["Nil"];
       for (var i = arr.length; i--; ) {
-	  list = [ "Cons", arr[i], list ];
+        list = [ "Cons", arr[i], list ];
       }
       return list;
   }
   function castListToJSArray(list) {
       var a = [];
       while (list[0] === "Cons") {
-	  a.push(list[1]);
-	  list = list[2];
+        a.push(list[1]);
+        list = list[2];
       }
       return a;
   }
-  
+
   var castJSStringToString = castJSArrayToList;
   function castStringToJSString(str) {
       if (typeof str === "string") return str;
       return castListToJSArray(str).join('');
   }
-  
+
   function fromTuple(t) { return t.slice(1); }
   function toTuple(a) { return ["Tuple" + a.length].concat(a); }
-  
+
   return {castJSBoolToBool:castJSBoolToBool,
 	  castBoolToJSBool:castBoolToJSBool,
 	  castJSNumberToFloat:castJSNumberToFloat,
@@ -71,7 +77,8 @@ Elm.JavaScript = function() {
 	  castJSTupleToTuple2:toTuple,
 	  castJSTupleToTuple3:toTuple,
 	  castJSTupleToTuple4:toTuple,
-	  castJSTupleToTuple5:toTuple
+	  castJSTupleToTuple5:toTuple,
+    randInRange: randInRange
   };
 }();
 
@@ -268,7 +275,7 @@ var Value = function(){
   function makeSpaces(s) {
     if (s.length == 0) { return s; }
     var arr = s.split('');
-    if (arr[0] == ' ') { arr[0] = "&nbsp;" }      
+    if (arr[0] == ' ') { arr[0] = "&nbsp;" }
     for (var i = arr.length; --i; ) {
       if (arr[i][0] == ' ' && arr[i-1] == ' ') {
         arr[i-1] = arr[i-1] + arr[i];
@@ -321,11 +328,11 @@ var Value = function(){
     t.innerHTML = txt;
     t.style.textAlign = 'left';
     if (w > 0) { t.style.width  = w + "px"; }
-    
+
     t.style.visibility = "hidden";
     t.style.styleFloat = "left";
     t.style.cssFloat   = "left";
-    
+
     document.body.appendChild(t);
     var cStyle = window.getComputedStyle(t,null);
     var realW = cStyle.getPropertyValue("width").slice(0,-2) - 0;
@@ -337,11 +344,11 @@ var Value = function(){
 
   function getSize(e) {
     var t = e.cloneNode(true);
-    
+
     t.style.visibility = "hidden";
     t.style.styleFloat = "left";
     t.style.cssFloat   = "left";
-    
+
     document.body.appendChild(t);
     var w = t.offsetWidth;
     var h = t.offsetHeight;
@@ -352,11 +359,11 @@ var Value = function(){
 
   function getExcess(e) {
     var t = e.cloneNode(true);
-    
+
     t.style.visibility = "hidden";
     t.style.styleFloat = "left";
     t.style.cssFloat   = "left";
-    
+
     document.body.appendChild(t);
     var ow = t.offsetWidth;
     var oh = t.offsetHeight;
@@ -411,7 +418,7 @@ var Value = function(){
 	if (output.length === 0) return "{}";
 	return "{ " + output.join(", ") + " }";
     } else if (v[0]) {
-	if (v[0].substring(0,5) === "Tuple") {
+	if (v[0].substring && v[0].substring(0,5) === "Tuple") {
 	    var output = new Array(v.length-1);
 	    for (var i = v.length; --i; ) { output[i-1] = toString(v[i]); }
 	    return "(" + output.join(",") + ")";
@@ -479,7 +486,7 @@ var Value = function(){
     }
     return out;
   };
-  
+
   function wrap(elem) {
       var p = Value.getSize(elem);
       return ["Element", Guid.guid(), ["EHtml",elem],
@@ -512,7 +519,8 @@ var Value = function(){
 	  wrap : wrap,
 	  addListener : addListener
        };
-}();Elm.List = function() {
+}();
+Elm.List = function() {
 
     var throwError = function(f) {
 	throw "Function '" + f + "' expecting a list!";
@@ -2991,18 +2999,22 @@ Elm.Mouse = function() {
 	  };
   }();
 Elm.Random = function() {
+
   var inRange = function(min) { return function(max) {
       return Elm.Signal.constant(Math.floor(Math.random() * (max-min+1)) + min);
     };
   };
+
   var randomize = function(min) { return function(max) { return function(signal) {
       function f(x) { return Math.floor(Math.random() * (max-min+1)) + min; }
       return Elm.Signal.lift(f)(signal);
     };
    };
   };
+
   return { inRange:inRange, randomize:randomize };
-}();Elm.Time = function() {
+}();
+Elm.Time = function() {
   function timeNow() { return (new window.Date).getTime(); }
   function everyWhen(isOn) { return function(t) {
       var clock = Elm.Signal.constant(timeNow());

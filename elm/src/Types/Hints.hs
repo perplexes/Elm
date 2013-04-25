@@ -90,7 +90,8 @@ graphicsColor = prefix "Color" clrs
 --------  Foreign  --------
 
 casts =
-  [ "castJSBoolToBool"       -: jsBool ==> bool
+  [ "randInRange"            -: int ==> int ==> int
+  , "castJSBoolToBool"       -: jsBool ==> bool
   , "castBoolToJSBool"       -: bool ==> jsBool
   , "castJSNumberToInt"      -: jsNumber ==> int
   , "castIntToJSNumber"      -: int ==> jsNumber
