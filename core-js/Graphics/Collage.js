@@ -129,6 +129,10 @@ function collageForms(w,h,forms) {
       dpr = window.devicePixelRatio;
     }
 
+    if(window.webkitImageSmoothingEnabled) {
+      window.webkitImageSmoothingEnabled = true;
+    }
+
     canvas.style.width  = w + 'px';
     canvas.style.height = h + 'px';
     canvas.style.display = "block";

@@ -1,142 +1,4160 @@
-Elm={};var Guid=function(){var d=0;return{guid:function(){return d+=1}}}();
-Elm.JavaScript=function(){function d(b){for(var a=["Nil"],c=b.length;c--;)a=["Cons",b[c],a];return a}function f(b){for(var a=[];"Cons"===b[0];)a.push(b[1]),b=b[2];return a}function b(b){return b.slice(1)}function c(b){return["Tuple"+b.length].concat(b)}return{castJSBoolToBool:function(b){return b},castBoolToJSBool:function(b){return b},castJSNumberToFloat:function(b){return b},castFloatToJSNumber:function(b){return b},castJSNumberToInt:function(b){return~~b},castIntToJSNumber:function(b){return b},
-Experimental:{castJSElementToElement:function(b){return function(a){return function(c){return["Element",Guid.guid(),["EExternalHtml",c],b,a,1,["Nothing"],["Nothing"]]}}},castElementToJSElement:function(b){return Render.render(b)}},castJSArrayToList:d,castListToJSArray:f,castJSStringToString:d,castStringToJSString:function(b){return"string"===typeof b?b:f(b).join("")},castTupleToJSTuple2:b,castTupleToJSTuple3:b,castTupleToJSTuple4:b,castTupleToJSTuple5:b,castJSTupleToTuple2:c,castJSTupleToTuple3:c,
-castJSTupleToTuple4:c,castJSTupleToTuple5:c}}();var JSjson=window.JSON;
-Elm.JSON=function(){function d(a,b){return function(j){return function(l){var g=c.castStringToJSString(j);return l[1].hasOwnProperty(g)&&(l=l[1][g],l[0]===a)?l[1]:b}}}function f(a){return function(b){function j(a){switch(a[0]){case "JsonNull":return null;case "JsonString":return c.castStringToJSString(a[1]);case "JsonObject":var g={};a=a[1][1];for(var e in a)g[e]=j(a[e]);return g;case "JsonArray":g=c.castListToJSArray(a[1]);for(e=g.length;e--;)g[e]=j(g[e]);return g;default:return a[1]}}return JSjson.stringify(j(["JsonObject",
-b]),null,c.castStringToJSString(a))}}function b(a){function b(a){switch(typeof a){case "string":return["JsonString",c.castJSStringToString(a)];case "number":return["JsonNumber",c.castJSNumberToFloat(a)];case "boolean":return["JsonBool",c.castJSBoolToBool(a)];case "object":if(null===a)return["JsonNull"];for(var g in a)a[g]=b(a[g]);return a instanceof Array?["JsonArray",c.castJSArrayToList(a)]:["JsonObject",["JSON",a]]}}a=JSjson.parse(a);for(var j in a)a[j]=b(a[j]);return["JSON",a]}var c=Elm.JavaScript,
-h=["JSON",{}];return{empty:h,singleton:function(a){return function(b){var j={};j[c.castStringToJSString(a)]=b;return["JSON",j]}},insert:function(a){return function(b){return function(j){j=j[1];var l={},g;for(g in j)l[g]=j[g];l[c.castStringToJSString(a)]=b;return["JSON",l]}}},lookup:function(a){return function(b){var j=c.castStringToJSString(a);return b[1].hasOwnProperty(j)?["Just",b[1][j]]:["Nothing"]}},findString:d("JsonString",["Nil"]),findObject:d("JsonObject",h),findArray:d("JsonArray",["Nil"]),
-findWithDefault:function(a){return function(b){return function(j){var l=c.castStringToJSString(b);return j[1].hasOwnProperty(l)?j[1][l]:a}}},remove:function(a){return function(b){b=b[1];var j={},l;for(l in b)j[l]=b[l];delete j[c.castStringToJSString(a)];return["JSON",j]}},toPrettyJSString:f,toJSString:f(""),fromJSString:b,toPrettyString:function(a){return function(b){return c.castJSStringToString(f(a)(b))}},toString:function(a){return c.castJSStringToString(f("")(a))},fromString:function(a){return b(c.castStringToJSString(a))},
-toList:function(a){a=a[1];var b=[],j;for(j in a)b.push(Value.Tuple(c.castJSStringToString(j),a[j]));return c.castJSArrayToList(b)},fromList:function(a){a=c.castListToJSArray(a);for(var b={},j=a.length;j--;)b[c.castStringToJSString(a[j][1])]=a[j][2];return["JSON",b]},JsonString:function(a){return["JsonString",a]},JsonNumber:function(a){return["JsonNumber",a]},JsonBool:function(a){return["JsonBool",a]},JsonNull:["JsonNull"],JsonArray:function(a){return["JsonArray",a]},JsonObject:function(a){return["JsonObject",
-a]}}}();
-var Value=function(){function d(a){if(0==a.length)return a;a=a.replace(/"/g,"&#34;").replace(/'/g,"&#39;").replace(/</g,"&#60;").replace(/>/g,"&#62;").replace(/\n/g,"<br/>");a=a.split("<br/>");for(var b=a.length;b--;){var c=a,l=b,g;g=a[b];if(0!=g.length){g=g.split("");" "==g[0]&&(g[0]="&nbsp;");for(var e=g.length;--e;)" "==g[e][0]&&" "==g[e-1]&&(g[e-1]+=g[e],g[e]="");for(e=g.length;e--;)if(1<g[e].length&&" "==g[e][0]){for(var k=g[e].split(""),f=k.length-2;0<=f;f-=2)k[f]="&nbsp;";g[e]=k.join("")}g=g.join("");
-g=" "===g[g.length-1]?g.slice(0,-1)+"&nbsp;":g}c[l]=g}return a.join("<br/>")}var f=function(a,b){if("object"===typeof a){if(a.hasOwnProperty("_")){for(var c in a)if(a[c]!=b[c])return!1;for(c in b)if(a[c]!=b[c])return!1;return!0}if(a===b)return!0;if(a.length!==b.length)return!1;for(c=a.length;c--;)if(!f(a[c],b[c]))return!1;return!0}return a===b},b=function(a){if("function"===typeof a)return"<function>";if("boolean"===typeof a)return a?"True":"False";if("number"!==typeof a){if("string"===typeof a&&
-2>a.length)return"'"+a+"'";if("object"===typeof a&&a.hasOwnProperty("_")){var c=[],j;for(j in a)if("_"!=j)for(var l=a[j].length;l--;)c.push(j+" = "+b(a[j][l]));return 0===c.length?"{}":"{ "+c.join(", ")+" }"}if(a[0]){if("Tuple"===a[0].substring(0,5)){c=Array(a.length-1);for(l=a.length;--l;)c[l-1]=b(a[l]);return"("+c.join(",")+")"}if("Cons"===a[0]){j="string"===typeof a[1]?'"':"]";var l="string"===typeof a[1]?"":",",g="string"===typeof a[1]?function(a){return a}:b,c=("string"===typeof a[1]?'"':"[")+
-g(a[1]);for(a=a[2];;)if("Cons"===a[0])c+=l+g(a[1]),a=a[2];else return c+j}else{if("Nil"===a[0])return"[]";if("JSON"===a[0])return"(JSON.fromList "+b(Elm.JSON.toList(a))+")";if("RBNode"===a[0]||"RBEmpty"===a[0])return a=Elm.Dict.foldr(function(a){return function(g){return function(b){return["Cons",["Tuple2",a,g],b]}}})(["Nil"])(a),c="Dict","Cons"===a[0]&&"Tuple0"===a[1][2][0]&&(c="Set",a=Elm.List.map(function(a){return a[1]})(a)),"("+c+".fromList "+b(a)+")";c="";for(l=a.length;--l;)c=" "+b(a[l])+c;
-c=a[0]+c;return 1<a.length?"("+c+")":c}}}return a+""},c=function(a){for(var b=["Nil"],c=a.length;c--;)b=["Cons",a[c],b];return b},h;h=document.addEventListener?function(a,b,c){a.addEventListener(b,c,!1)}:function(a,b,c){a.attachEvent("on"+b,c)};return{eq:f,str:c,show:function(a){return c(b(a))},Tuple:function(){var a=arguments.length,b=Array(a+1);for(b[0]="Tuple"+arguments.length;a--;)b[a+1]=arguments[a];return b},append:function(a,b){if("string"===typeof a&&"string"===typeof b)return a.concat(b);
-if("Nil"===a[0])return b;var c=["Cons",a[1],["Nil"]],l=c;for(a=a[2];"Cons"===a[0];)l[2]=["Cons",a[1],["Nil"]],a=a[2],l=l[2];l[2]=b;return c},listToArray:function(a){for(var b=[];"Cons"===a[0];)b.push(a[1]),a=a[2];return b},toText:function(a){if("string"===typeof a)return d(a);for(var b=[];"Cons"===a[0];)b.push(a[1]),a=a[2];return d(b.join(""))},properEscape:d,getTextSize:function(a,b,c){var l=document.createElement("div");l.innerHTML=c;l.style.textAlign="left";0<a&&(l.style.width=a+"px");l.style.visibility=
-"hidden";l.style.styleFloat="left";l.style.cssFloat="left";document.body.appendChild(l);c=window.getComputedStyle(l,null);a=c.getPropertyValue("width").slice(0,-2)-0;c=c.getPropertyValue("height").slice(0,-2)-0;document.body.removeChild(l);return[Math.ceil(a),Math.ceil(Math.max(b,c))]},getSize:function(a){a=a.cloneNode(!0);a.style.visibility="hidden";a.style.styleFloat="left";a.style.cssFloat="left";document.body.appendChild(a);var b=a.offsetWidth,c=a.offsetHeight;document.body.removeChild(a);return[b,
-c]},getExcess:function(a){a=a.cloneNode(!0);a.style.visibility="hidden";a.style.styleFloat="left";a.style.cssFloat="left";document.body.appendChild(a);var b=a.offsetWidth,c=a.offsetHeight,l=window.getComputedStyle(a,null),g=l.getPropertyValue("width").slice(0,-2)-0,l=l.getPropertyValue("height").slice(0,-2)-0;document.body.removeChild(a);return[b-g,c-l]},groupForms:function(a){a=Elm.JavaScript.castListToJSArray(a);for(var b=[],c=[],l=a.length;l--;){var g=a[l];switch(g[4][0]){case "FElement":0<c.length&&
-(b.push(c),c=[]);b.push(g);break;default:c.push(g)}}0<c.length&&b.push(c);return b},wrap:function(b){var c=Value.getSize(b);return["Element",Guid.guid(),["EHtml",b],c[0],c[1],1,["Nothing"],["Nothing"]]},addListener:h}}();
-Elm.List=function(){function d(b){return function(a){if("Nil"===a[0])return a;"Cons"!==a[0]&&g("map");var e=["Cons",b(a[1]),["Nil"]],c=e;for(a=a[2];"Cons"===a[0];)c[2]=["Cons",b(a[1]),["Nil"]],a=a[2],c=c[2];return e}}function f(a){return function(b){return function(e){var c=b;if("Nil"===e[0])return c;for("Cons"!==e[0]&&g("foldl");"Cons"===e[0];)c=a(e[1])(c),e=e[2];return c}}}function b(a){return function(b){return function(e){var c=b;if("Nil"===e[0])return c;"Cons"!==e[0]&&g("foldr");for(var k=[];"Cons"===
-e[0];)k.push(e[1]),e=e[2];for(e=k.length;e--;)c=a(k[e])(c);return c}}}function c(a){return function(b){var g;"Cons"!==b[0]?g=void 0:(g=b[1],b=b[2],g=f(a)(g)(b));return g}}function h(b){return function(a){return function(e){if("Nil"===e[0])return["Cons",a,["Nil"]];"Cons"!==e[0]&&g("scanl");for(var c=[a];"Cons"===e[0];)a=b(e[1])(a),c.push(a),e=e[2];e=["Nil"];for(var k=c.length;k--;)e=["Cons",c[k],e];return e}}}function a(b){return function(e){a:{for(var g=[function(b){return"Nil"!==b[0]?void 0:["Tuple2",
-["Nil"],["Nil"]]},function(e){if("Cons"===e[0]){var g=e[1];e=e[2];var c=a(b)(e);"Tuple2"!==c[0]?g=void 0:(e=c[1],c=c[2],g=b(g)?["Tuple2",["Cons",g,e],c]:["Tuple2",e,["Cons",g,c]]);return g}}],c=g.length;c--;){var k=g[c](e);if(void 0!==k){e=k;break a}}e=void 0}return e}}function m(b){a:{for(var a=[function(b){return"Nil"!==b[0]?void 0:["Tuple2",["Nil"],["Nil"]]},function(b){if("Cons"!==b[0])b=void 0;else if(b=["Tuple2",b[1],m(b[2])],"Tuple2"!==b[0]||"Tuple2"!==b[1][0])b=void 0;else{var a=b[1][1],e=
-b[1][2];b="Tuple2"!==b[2][0]?void 0:["Tuple2",["Cons",a,b[2][1]],["Cons",e,b[2][2]]]}return b}],e=a.length;e--;){var g=a[e](b);if(void 0!==g){b=g;break a}}b=void 0}return b}function j(b){return function(a){a:{for(var e=[function(b){return"Nil"!==b[0]?void 0:["Nil"]},function(b){if("Cons"===b[0]){var a=b[1];return"Nil"!==b[2][0]?void 0:["Cons",a,["Nil"]]}},function(a){if("Cons"===a[0]){var e=a[1];if("Cons"===a[2][0]){var g=a[2][1];a=a[2][2];return["Cons",e,["Cons",b,j(b)(["Cons",g,a])]]}}}],g=e.length;g--;){var c=
-e[g](a);if(void 0!==c){a=c;break a}}a=void 0}return a}}function l(b){return function(a){a:{for(var e=[function(b){return"Nil"!==b[0]?void 0:["Nil"]},function(b){if("Cons"===b[0]){var a=b[1];return"Nil"!==b[2][0]?void 0:a}},function(a){if("Cons"===a[0]){var e=a[1];if("Cons"===a[2][0]){var g=a[2][1];a=a[2][2];return Value.append(e,Value.append(b,l(b)(["Cons",g,a])))}}}],g=e.length;g--;){var c=e[g](a);if(void 0!==c){a=c;break a}}a=void 0}return a}}var g=function(b){throw"Function '"+b+"' expecting a list!";
-},e=f(function(b){return function(a){return["Cons",b,a]}})(["Nil"]),k=b(function(b){return function(a){return Value.append(b,a)}})(["Nil"]),x=f(function(b){return function(a){return b&&a}})(!0),n=f(function(b){return function(a){return b||a}})(!1),p=f(function(b){return function(a){return b+a}})(0),s=f(function(b){return function(a){return b*a}})(1),v=c(function(b){return function(a){return Math.max(b,a)}}),t=c(function(b){return function(a){return Math.min(b,a)}});return{head:function(b){if("Cons"!==
-b[0])throw"Error: 'head' only accepts lists of length greater than one.";return b[1]},tail:function(b){if("Cons"!==b[0])throw"Error: 'tail' only accepts lists of length greater than one.";return b[2]},last:function(b){if("Cons"!==b[0])throw"Error: 'last' only accepts lists of length greater than one.";for(var a=b[1];"Cons"===b[0];)a=b[1],b=b[2];return a},map:d,foldl:f,foldr:b,foldl1:c,foldr1:function(b){return function(a){if("Nil"===a[0])throw"'foldr1' requires an non-empty list.";"Cons"!==a[0]&&
-g("foldr1");for(var e=[];"Cons"===a[0];)e.push(a[1]),a=a[2];a=e.pop();for(var c=e.length;c--;)a=b(e[c])(a);return a}},scanl:h,scanl1:function(b){return function(a){if("Cons"!==a[0])throw"Error: 'scanl1' requires a list of at least length 1.";return h(b)(a[1])(a[2])}},filter:function(b){return function(a){if("Nil"===a[0])return a;"Cons"!==a[0]&&g("filter");for(var e=[];"Cons"===a[0];)b(a[1])&&e.push(a[1]),a=a[2];a=["Nil"];for(var c=e.length;c--;)a=["Cons",e[c],a];return a}},length:function(b){for(var a=
-0;"Cons"===b[0];)a+=1,b=b[2];return a},reverse:e,concat:k,concatMap:function(b){return function(a){return k(d(b)(a))}},and:x,or:n,all:function(b){return f(function(a){return function(e){return e&&b(a)}})(!0)},any:function(b){return f(function(a){return function(e){return e||b(a)}})(!1)},sum:p,product:s,maximum:v,minimum:t,partition:a,zipWith:function(b){return function(a){return function(e){if("Nil"===a[0]||"Nil"===e[0])return["Nil"];("Cons"!==a[0]||"Cons"!==e[0])&&g("zipWith");for(var c=[];"Cons"===
-a[0]&&"Cons"===e[0];)c.push(b(a[1])(e[1])),a=a[2],e=e[2];e=["Nil"];for(var k=c.length;k--;)e=["Cons",c[k],e];return e}}},zip:function(a){return function(b){if("Nil"===a[0]||"Nil"===b[0])return["Nil"];("Cons"!==a[0]||"Cons"!==b[0])&&g("zip");for(var e=[];"Cons"===a[0]&&"Cons"===b[0];)e.push(["Tuple2",a[1],b[1]]),a=a[2],b=b[2];b=["Nil"];for(var c=e.length;c--;)b=["Cons",e[c],b];return b}},unzip:m,intersperse:j,intercalate:l,sort:function(a){if("Nil"===a[0])return a;"Cons"!==a[0]&&g("sort");for(var b=
-[];"Cons"===a[0];)b.push(a[1]),a=a[2];b.sort(function(a,b){return a-b});a=["Nil"];for(var e=b.length;e--;)a=["Cons",b[e],a];return a},take:function(a){return function(b){if(0>=a)return["Nil"];if("Nil"===b[0])return b;"Cons"!==b[0]&&g("take");var e=["Cons",b[1],["Nil"]],c=e;b=b[2];for(--a;"Cons"===b[0]&&0<a;)c[2]=["Cons",b[1],["Nil"]],c=c[2],b=b[2],--a;return e}},drop:function(a){return function(b){if("Nil"===b[0])return b;for("Cons"!==b[0]&&g("drop");"Cons"===b[0]&&0<a;)b=b[2],--a;return b}}}}();
-Elm.Maybe=function(){function d(f){return function(b){return"Just"===f[0]?["Cons",f[1],b]:b}}return{Just:function(f){return["Just",f]},Nothing:["Nothing"],justs:Elm.List.foldr(d)(["Nil"]),isJust:function(f){return"Just"===f[0]},isNothing:function(f){return"Nothing"===f[0]},cons:d,maybe:function(f){return function(b){return function(c){return"Just"===c[0]?b(c[1]):f}}}}}();
-Elm.Either=function(){function d(b){return"Left"==b[0]}function f(b){return"Right"==b[0]}function b(b){return Elm.List.map(function(b){return b[1]})(b)}return{Left:function(b){return["Left",b]},Right:function(b){return["Right",b]},either:function(b){return function(f){return function(a){switch(a[0]){case "Left":return b(a[1]);case "Right":return f(a[1])}}}},isLeft:d,isRight:f,lefts:function(c){return b(Elm.List.filter(d)(c))},rights:function(c){return b(Elm.List.filter(f)(c))},partition:function(c){c=
-Elm.List.partition(d)(c);c[1]=b(c[1]);c[2]=b(c[2]);return c}}}();
-Elm.Char=function(){function d(b,a){return function(c){c=c.charCodeAt(0);return b<=c&&c<=a}}var f=d(48,57),b=d(97,102),c=d(65,70);return{fromCode:function(b){return String.fromCharCode(b)},toCode:function(b){return b.charCodeAt(0)},toUpper:function(b){return b.toUpperCase()},toLower:function(b){return b.toLowerCase()},toLocaleUpper:function(b){return b.toLocaleUpperCase()},toLocaleLower:function(b){return b.toLocaleLowerCase()},isLower:d(97,122),isUpper:d(65,90),isDigit:f,isOctDigit:d(48,55),isHexDigit:function(d){return f(d)||
-b(d)||c(d)}}}();
-Elm.Color=function(){function d(f){var b=f.value*f.saturation,c=f.hue/60,d=b*(1-Math.abs(c%2-1)),a=0,m=0,j=0;0<=c&&1>c?(a=b,m=d,j=0):1<=c&&2>c?(a=d,m=b,j=0):2<=c&&3>c?(a=0,m=b,j=d):3<=c&&4>c?(a=0,m=d,j=b):4<=c&&5>c?(a=d,m=0,j=b):5<=c&&6>c&&(a=b,m=0,j=d);f=f.value-b;return["Color",Math.round(255*(a+f)),Math.round(255*(m+f)),Math.round(255*(j+f)),1]}return{rgba:function(f){return function(b){return function(c){return function(d){return["Color",f,b,c,d]}}}},rgb:function(f){return function(b){return function(c){return["Color",f,
-b,c,1]}}},hsva:function(f){return function(b){return function(c){return function(h){var a=d({hue:f,saturation:b,value:c});a[4]=h;return a}}}},hsv:function(f){return function(b){return function(c){return d({hue:f,saturation:b,value:c})}}},red:["Color",255,0,0,1],green:["Color",0,255,0,1],blue:["Color",0,0,255,1],yellow:["Color",255,255,0,1],cyan:["Color",0,255,255,1],magenta:["Color",255,0,255,1],black:["Color",0,0,0,1],white:["Color",255,255,255,1],gray:["Color",128,128,128,1],grey:["Color",128,128,
-128,1],complement:function(f){var b;b=f[1]/255;var c=f[2]/255;f=f[3]/255;var h=Math.max(b,c,f),a=Math.min(b,c,f),a=h-a,m=0;0===a?m=0:h===b?m=(c-f)/a%6:h===c?m=(f-b)/a+2:h===f&&(m=(b-c)/a+4);b={value:h,hue:60*m,saturation:0===h?0:a/h};b.hue=(b.hue+180)%360;return d(b)},extract:function(f){return 1===f[4]?"rgb("+f[1]+","+f[2]+","+f[3]+")":"rgba("+f[1]+","+f[2]+","+f[3]+","+f[4]+")"}}}();
-var Collage=function(){function d(b,a){var e=a.length-1;if(!(0>=e))for(b.moveTo(a[e][1],a[e][2]);e--;)b.lineTo(a[e][1],a[e][2])}function f(b,a,e,c){0===b.length&&(b=[8,4]);var f=c.length-1;if(!(0>=f)){var n=c[f][1],p=c[f][2],d=0,j=0,h=0,m=0,q=0,u=0,w=b.length,z=!0,y=b[0];for(a.moveTo(n,p);f--;){d=c[f][1];j=c[f][2];h=d-n;m=j-p;for(q=Math.sqrt(h*h+m*m);y<=q;)n+=h*y/q,p+=m*y/q,a[z?"lineTo":"moveTo"](n,p),h=d-n,m=j-p,q=Math.sqrt(h*h+m*m),z=!z,u=(u+1)%w,y=b[u];0<q&&(a[z?"lineTo":"moveTo"](d,j),y-=q);n=
-d;p=j}}a.strokeStyle=Elm.Color.extract(e);a.stroke()}function b(b,a,e,c,x){a.clearRect(0,0,e,c);for(e=x.length;e--;){var n=x[e],p=b;c=a;var h=n[1],m=n[2],t=n[3][1],r=n[3][2],n=n[4];c.save();(0!==t||0!==r)&&c.translate(t,r);h!==~~h&&c.rotate(2*Math.PI*h);1!==m&&c.scale(m,m);c.beginPath();switch(n[0]){case "FLine":a:switch(p=c,h=n,n=h[3][1],h[1][0]){case "Solid":h=h[2];d(p,n);p.strokeStyle=Elm.Color.extract(h);p.stroke();break;case "Dotted":f([3,3],p,h[2],n);break a;case "Dashed":f([8,4],p,h[2],n);
-break a;case "Custom":f(h[1][1],p,h[2],n)}break;case "FShape":a:switch(t=p,m=c,p=n[1],h=n[2],n=n[3][1],p[0]){case "Filled":p=m;d(p,n);p.fillStyle=Elm.Color.extract(h);p.fill();break a;case "Outlined":p=m;d(p,n);p.strokeStyle=Elm.Color.extract(h);p.stroke();break a;case "Textured":h=t;p=p[1];t=new Image;t.src=j.castStringToJSString(p);t.onload=h;d(m,n);m.fillStyle=m.createPattern(t,"repeat");m.fill();break a;case "CustomOutline":f(p[1],m,h,n)}break;case "FImage":h=c,m=n[1],t=n[2],n=n[3],r=new Image,
-r.onload=p,r.src=j.castStringToJSString(n),h.drawImage(r,-m/2,-t/2,m,t)}c.restore()}}function c(a,c,e){var k=Render.newElement("canvas");a=~~a;c=~~c;k.style.width=a+"px";k.style.height=c+"px";k.style.display="block";k.width=a;k.height=c;if(k.getContext){var f=k.getContext("2d");b(function(){b(this,f,a,c,e)},f,a,c,e);return k}k.innerHTML="Your browser does not support the canvas element.";return k}function h(b,a,e,c,f,n,d){b="translate("+(e-f/2)+"px,"+(c-n/2)+"px) "+(1===a?"":"scale("+a+","+a+")")+
-" "+(b===~~b?"":"rotate("+360*b+"deg)");d.style.transform=b;d.style.msTransform=b;d.style.MozTransform=b;d.style.webkitTransform=b;d.style.OTransform=b}function a(a,g,e){if(!Value.eq(e,g)){var k=a.style.width.slice(0,-2)-0,f=a.style.height.slice(0,-2)-0;if("object"===typeof e[0]){if("object"===typeof g[0]&&a.getContext){var n=a.getContext("2d");return b(function(){b(this,n,k,f,e)},n,k,f,e)}g=c(k,f,e);g.style.position="absolute";return a.parentNode.replaceChild(g,a)}a.style.width=~~k+"px";a.style.height=
-~~f+"px";var d=e[4][1];Render.update(a.firstChild,g[4][1],d);h(e[1],e[2],e[3][1],e[3][2],d[3],d[4],a.firstChild)}}function m(b,a,e,c,f){var n=0,d,j=(b[1]-c[1])/e;b=(b[2]-c[2])/e;0!==a&&(a*=-2*Math.PI,e=j*Math.cos(a)-b*Math.sin(a),b=j*Math.sin(a)+b*Math.cos(a),j=e);if(0===f.length)return!1;d=f[0];for(e=f.length-1;e--;){a=f[e];c=d[1];d=d[2];var h=a[1],m=a[2];if(d<m)var r=d,q=m;else r=m,q=d;if(c<h)var u=c,w=h;else u=h,w=c;r<b&&b<=q&&j<=w&&(j<=u||j<=(b-d)*(h-c)/(m-d)+c)&&++n;d=a}return 1===n%2}var j=
-Elm.JavaScript;return{collage:function(b,a,e){if(0===e.length)return c(b,a,[]);for(var k=Array(e.length),d=e.length;d--;){var f=e[d];if("string"===typeof f[0]){var j=k,m=d,v=b,t=a,r=f[1],q=f[2],u=f[3][1],w=f[3][2],z=f[4][1],f=Render.render(z);h(r,q,u,w,z[3],z[4],f);r=Render.newElement("div");Render.addTo(r,f);r.style.width=~~v+"px";r.style.height=~~t+"px";r.style.overflow="hidden";j[m]=r}else k[d]=c(b,a,f)}return 1===e.length?k[0]:Render.flowWith(Render.goIn,function(b){return b},k)},updateCollage:function(b,
-c,e){if(1===e.length)return a(b,c[0],e[0]);b=b.childNodes;for(var k=b.length,f=k;f--;)a(b[k-f-1],c[f],e[f])},insideForm:function(b){return function(a){var e=b[1],c=b[2];if(6>a.length){var f=a[3][1],d=a[3][2],j=0,h=a[2];switch(a[4][0]){case "FShape":for(var v=a[4][3][1],t=v.length;--t;)var r=v[t],j=Math.max(j,r[1]*r[1]+r[2]*r[2]);j*=h*h;break;case "FImage":v=h*a[4][1]/2;h=h*a[4][2]/2;j=v*v+h*h;break;case "FElement":v=h*a[4][1][3]/2,h=h*a[4][1][4]/2,j=v*v+h*h}a.push(function(b,a){var e=b-f,c=a-d;return e*
-e+c*c<j+1})}if(!a[5](e,c))return!1;var q,u;switch(a[4][0]){case "FShape":return m(b,a[1],a[2],a[3],a[4][3][1]);case "FLine":return!1;case "FImage":q=a[4][1]/2;u=a[4][2]/2;break;case "FElement":q=a[4][1][3]/2,u=a[4][1][4]/2}return m(b,a[1],a[2],a[3],[[null,q,u],[null,-q,u],[null,-q,-u],[null,q,-u],[null,q,u]])}}}}();
-Elm.Graphics=function(){function d(b){return function(a){return["Position",b,a]}}function f(b){return function(a){return["EText",b,a]}}function b(b){return function(a){return["EFlow",b,s.castListToJSArray(a)]}}function c(b){return["Line",s.castListToJSArray(b)]}function h(b){return function(a){var e=s.castListToJSArray(b);0<e.length&&e.push(e[0]);return["Shape",e,a]}}function a(b){return function(a){return function(e){return function(c){return["Form",b,a,e,c]}}}}function m(b){return function(a){return function(e){return["FLine",
-b,a,e]}}}function j(b){return function(a){return function(e){return["FShape",b,a,e]}}}function l(b,a,e,c,g,k){return["Element",Guid.guid(),b,a,e,c,g,k]}function g(b,a,e){return["Element",Guid.guid(),b,a,e,1,["Nothing"],["Nothing"]]}function e(b){return~~b[3]}function k(b){return~~b[4]}function x(b){return function(a){return function(e){return g(["EImage",s.castStringToJSString(e)],b,a)}}}function n(b){return function(a){return g(z,b,a)}}function p(b){return function(a){return function(e){var c=map(function(e){return["Tuple2",
-b/2*Math.cos(2*(Math.PI/50)*e),a/2*Math.sin(2*(Math.PI/50)*e)]}),g=49,k=["Nil"];if(0<=g){do k=["Cons",g,k];while(0<g--)}return h(c(k))(e)}}}for(this.i in Elm.List)eval("var "+this.i+" = Elm.List[this.i];");var s=Elm.JavaScript,v=["DRight"],t=["DDown"],r=["DOut"],q=["Near"],u=["Mid"],w=["Far"],z=["EEmpty"],y=["Solid"],D=["Dotted"],F=["Dashed"],B=["Filled"],E=["Outlined"],A=d(q)(q),C=d(w)(q),G=d(q)(w),H=d(w)(w),I=d(q)(u),J=d(w)(u),q=d(u)(q),w=d(u)(w),u=d(u)(u);return{left:["DLeft"],right:v,down:t,up:["DUp"],
-inward:["DIn"],outward:r,topLeft:A,topRight:C,bottomLeft:G,bottomRight:H,midLeft:I,midRight:J,midTop:q,midBottom:w,middle:u,middleAt:function(b){return function(a){return["PositionAt",b,a]}},topLeftAt:function(b){return function(a){return["PositionTL",b,a]}},topRightAt:function(b){return function(a){return["PositionTR",b,a]}},bottomLeftAt:function(b){return function(a){return["PositionBL",b,a]}},bottomRightAt:function(b){return function(a){return["PositionBR",b,a]}},absolute:function(b){return["Absolute",
-b]},relative:function(b){return["Relative",b]},width:function(b){return function(a){var e=a[2];switch(e[0]){case "EImage":case "EVideo":return l(a[2],b,a[4]*b/a[3],a[5],a[6],a[7]);case "EText":return e=Value.getTextSize(b,a[4],e[2]),l(a[2],b,e[1],a[5],a[6],a[7])}return l(a[2],b,a[4],a[5],a[6],a[7])}},height:function(a){return function(b){switch(b[2][0]){case "EImage":case "EVideo":return l(b[2],b[3]*a/b[4],a,b[5],b[6],b[7])}return l(b[2],b[3],a,b[5],b[6],b[7])}},size:function(b){return function(a){return function(e){return l(e[2],
-b,a,e[5],e[6],e[7])}}},opacity:function(b){return function(a){return l(a[2],a[3],a[4],b,a[6],a[7])}},color:function(b){return function(a){return l(a[2],a[3],a[4],a[5],["Just",b],a[7])}},link:function(b){return function(a){return l(a[2],a[3],a[4],a[5],a[6],["Just",s.castStringToJSString(b)])}},widthOf:e,heightOf:k,sizeOf:function(a){return["Tuple2",~~a[3],~~a[4]]},text:function(a){var b=Value.getTextSize(0,0,a);return g(f("left")(a),b[0],b[1])},asText:function(a){a=Elm.Text.monospace(Value.toText(Value.show(a)));
-var b=Value.getTextSize(0,0,a);return g(f("left")(a),b[0],b[1])},plainText:function(a){a=Value.toText(a);var b=Value.getTextSize(0,0,a);return g(f("left")(a),b[0],b[1])},centeredText:function(a){var b=Value.getTextSize(0,0,a);return g(f("center")(a),b[0],b[1])},justifiedText:function(a){var b=Value.getTextSize(0,0,a);return g(f("justify")(a),b[0],b[1])},rightedText:function(a){var b=Value.getTextSize(0,0,a);return g(f("right")(a),b[0],b[1])},image:x,images:function(a){var b=Elm.Signal.constant(n(0)(0));
-a=Elm.Signal.lift(function(a){a=s.castStringToJSString(a);var e=new Image;e.onload=function(){Dispatcher.notify(b.id,x(this.width)(this.height)(a))};e.src=a})(a);return Elm.Signal.lift2(function(a){return function(){return a}})(b)(a)},video:function(a){return function(b){return function(e){return g(["EVideo",s.castStringToJSString(e)],a,b)}}},fittedImage:function(a){return function(b){return function(e){return g(["EFittedImage",s.castStringToJSString(e)],a,b)}}},flow:function(a){return function(c){var f;
-f=map(e)(c);a:{switch(a[0]){case "DLeft":f=sum(f);break a;case "DRight":f=sum(f);break a}f=maximum(f)}var d;d=map(k)(c);a:{switch(a[0]){case "DDown":d=sum(d);break a;case "DUp":d=sum(d);break a}d=maximum(d)}return g(b(a)(c),f,d)}},above:function(a){return function(e){return g(b(t)(["Cons",a,["Cons",e,["Nil"]]]),Math.max(~~a[3],~~e[3]),~~a[4]+~~e[4])}},below:function(a){return function(e){return g(b(t)(["Cons",e,["Cons",a,["Nil"]]]),Math.max(~~a[3],~~e[3]),~~a[4]+~~e[4])}},beside:function(a){return function(e){return g(b(v)(["Cons",
-a,["Cons",e,["Nil"]]]),~~a[3]+~~e[3],Math.max(~~a[4],~~e[4]))}},layers:function(a){return g(b(r)(a),maximum(map(e)(a)),maximum(map(k)(a)))},collage:function(a){return function(b){return function(e){return g(["ECollage",a,b,Value.groupForms(e)],a,b)}}},spacer:n,container:function(a){return function(b){return function(e){return function(c){return g(["EContainer",e,c],a,b)}}}},line:c,segment:function(a){return function(b){return c(["Cons",a,["Cons",b,["Nil"]]])}},polygon:h,rect:function(a){return function(b){return function(e){return h(["Cons",
-["Tuple2",0-a/2,0-b/2],["Cons",["Tuple2",0-a/2,b/2],["Cons",["Tuple2",a/2,b/2],["Cons",["Tuple2",a/2,0-b/2],["Nil"]]]]])(e)}}},oval:p,circle:function(a){return p(2*a)(2*a)},ngon:function(a){return function(b){return function(e){var c=map(function(e){return["Tuple2",b*Math.cos(2*(Math.PI/a)*e),b*Math.sin(2*(Math.PI/a)*e)]}),g=a-1,k=["Nil"];if(0<=g){do k=["Cons",g,k];while(0<g--)}return h(c(k))(e)}}},solid:function(b){return function(e){return a(0)(1)(["Tuple2",0,0])(m(y)(b)(e))}},dotted:function(b){return function(e){return a(0)(1)(["Tuple2",
-0,0])(m(D)(b)(e))}},dashed:function(b){return function(e){return a(0)(1)(["Tuple2",0,0])(m(F)(b)(e))}},customLine:function(b){return function(e){return function(c){return a(0)(1)(["Tuple2",0,0])(m(["Custom",s.castListToJSArray(b)])(e)(c))}}},filled:function(b){return function(e){return a(0)(1)(e[2])(j(B)(b)(e))}},outlined:function(b){return function(e){return a(0)(1)(e[2])(j(E)(b)(e))}},customOutline:function(b){return function(e){return function(c){return a(0)(1)(c[2])(j(["CustomOutline",s.castListToJSArray(b)])(e)(c))}}},
-textured:function(b){return function(e){return a(0)(1)(e[2])(j(["Textured",b])(null)(e))}},sprite:function(b){return function(e){return function(c){return function(g){return a(0)(1)(g)(["FImage",e,c,s.castStringToJSString(b)])}}}},toForm:function(b){return function(e){return a(0)(1)(b)(["FElement",e])}},rotate:function(b){return function(e){a:{switch(e[0]){case "Form":var c=e[2],g=e[3],k=e[4];e=a(b+e[1])(c)(g)(k);break a}throw"Non-exhaustive pattern match in case";}return e}},scale:function(b){return function(e){return a(e[1])(b*
-e[2])(e[3])(e[4])}},move:function(b){return function(e){return function(c){var g;a:{switch(c[0]){case "Form":g=c[1];var k=c[2],f=c[3];c=c[4];switch(f[0]){case "Tuple2":var d=f[1],f=f[2];g=a(g)(k)(["Tuple2",b+d,e+f])(c);break a}}throw"Non-exhaustive pattern match in case";}return g}}},isWithin:Collage.insideForm}}();
-Elm.Text=function(){function d(a){return Value.toText(a)}var f=function(a){return function(b){return"<"+a+' style="padding:0;margin:0">'+b+"</"+a+">"}},b=function(a,b){return function(c){return"<span style='"+a+":"+b+"'>"+c+"</span>"}},c=function(a){a=Elm.JavaScript.castStringToJSString(a);return b("font-family",a)},h=f("h1"),a=b("font-style","italic"),f=f("b"),m=b("text-decoration","underline"),j=b("text-decoration","overline"),l=b("text-decoration","line-through");return{fromString:d,toText:d,header:h,
-height:function(a){return b("font-size",a+"em")},italic:a,bold:f,underline:m,overline:j,strikeThrough:l,monospace:c("monospace"),typeface:c,color:function(a){return b("color",Elm.Color.extract(a))},link:function(a){return function(b){return"<a href='"+d(a)+"'>"+b+"</a>"}}}}();
-var Render=function(){function d(a){a=document.createElement(a);a.style.padding="0";a.style.margin="0";return a}function f(a){return a}function b(a){a.style.styleFloat="left";a.style.cssFloat="left";return a}function c(a){a.style.position="absolute";return a}function h(a,b,c){for(var f=d("div"),j=c.length;j--;){var h=a(b(c[j]));f.appendChild(h)}return f}function a(a){switch(a[0]){case "Absolute":return a[1]+"px";case "Relative":return 100*a[1]+"%"}}function m(b,e){e.style.position="absolute";e.style.margin=
-"auto";switch(b[0]){case "Position":"Far"!==b[1][0]&&(e.style.left=0);"Near"!==b[1][0]&&(e.style.right=0);"Far"!==b[2][0]&&(e.style.top=0);"Near"!==b[2][0]&&(e.style.bottom=0);break;case "PositionAt":e.style.top=a(b[2]);e.style.left=a(b[1]);var c="translate("+~~(-e.style.width.slice(0,-2)/2)+"px,"+~~(-e.style.height.slice(0,-2)/2)+"px)";e.style.transform=c;e.style.msTransform=c;e.style.MozTransform=c;e.style.webkitTransform=c;e.style.OTransform=c;break;default:c=b[0].slice(-2),e.style["T"===c[0]?
-"top":"bottom"]=a(b[2]),e.style["L"===c[1]?"left":"right"]=a(b[1])}}function j(a){var e={};switch(a[2][0]){case "EText":var e=a[2][1],k=a[2][2],l=d("div");l.innerHTML=k;l.style.textAlign=e;e=l;break;case "EImage":e=a[2][1];k=d("img");k.src=e;k.name=e;k.style.display="block";e=k;break;case "EVideo":l=a[2][1];e=d("video");e.controls="controls";k=d("source");k.src=l;l=l.split(".");k.type="video/"+l[l.length-1];e.appendChild(k);e.style.display="block";break;case "EFittedImage":var n=a[3],p=a[4],e=a[2][1],
-k=d("div");k.style.width=n+"px";k.style.height=p+"px";k.style.position="relative";k.style.overflow="hidden";var s=d("img");s.onload=function(){s.style.position="absolute";s.style.margin="auto";var a=n,b=p;n/p>this.width/this.height?b=Math.round(this.height*n/this.width):a=Math.round(this.width*p/this.height);s.style.width=a+"px";s.style.height=b+"px";s.style.left=(n-a)/2+"px";s.style.top=(p-b)/2+"px"};s.src=e;s.name=e;k.appendChild(s);e=k;break;case "EFlow":a:{e=a[2][2];switch(a[2][1][0]){case "DDown":e=
-e.slice(0).reverse();case "DUp":e=h(f,j,e);break a;case "DRight":e=e.slice(0).reverse();case "DLeft":e=h(b,j,e);break a;case "DOut":e=e.slice(0).reverse();case "DIn":e=h(c,j,e);break a}e=void 0}break;case "ECollage":e=Collage.collage(a[2][1],a[2][2],a[2][3]);break;case "EEmpty":e=d("div");break;case "EContainer":k=a[2][1];e=j(a[2][2]);m(k,e);k=d("div");k.style.position="relative";k.style.overflow="hidden";k.appendChild(e);e=k;break;case "EHtml":e=a[2][1];"button"!==e.type&&(k=Value.getExcess(e),a[3]-=
-k[0],a[4]-=k[1]);break;case "EExternalHtml":e=d("div"),e.appendChild(a[2][1])}e.id=a[1];e.style.width=~~a[3]+"px";e.style.height=~~a[4]+"px";1!==a[5]&&(e.style.opacity=a[5]);"Just"===a[6][0]&&(e.style.backgroundColor=Elm.Color.extract(a[6][1]));return"Just"===a[7][0]?(k=d("a"),k.href=a[7][1],k.appendChild(e),k):e}function l(a,e,k){"A"===a.tagName&&(a=a.firstChild);if(e[1]!==k[1]){if(e[2][0]!==k[2][0])return a.parentNode.replaceChild(j(k),a);var d=k[2],n=e[2];switch(d[0]){case "EText":d[1]!==n[1]&&
-(a.style.textAlign=d[1]);d[2]!==n[2]&&(a.innerHTML=d[2]);break;case "EImage":d[1]!==n[1]&&(a.src=d[1]);break;case "EVideo":case "EFittedImage":if(!Value.eq(d,n)||k[3]!==e[3]||k[4]!==e[4])return a.parentNode.replaceChild(j(k),a);break;case "ECollage":if(d[1]!==n[1]||d[2]!==n[2]||d[3].length!==n[3].length)return a.parentNode.replaceChild(j(k),a);Collage.updateCollage(a,n[3],d[3]);break;case "EFlow":if(d[1]!==n[1])return a.parentNode.replaceChild(j(k),a);var h=d[2],s=a.childNodes;if(h.length!==s.length)return a.parentNode.replaceChild(j(k),
-a);var n=n[2],v=function(a){return a};switch(d[1][0]){case "DDown":case "DUp":v=f;break;case "DRight":case "DLeft":v=b;break;case "DOut":case "DIn":v=c}for(d=s.length;d--;)l(s[d],n[d],h[d]),v(s[d]);break;case "EContainer":l(a.childNodes[0],n[2],d[2]);m(d[1],a.childNodes[0]);break;case "EHtml":k[1]!==e[1]&&(h=j(k),a.parentNode.replaceChild(h,a),a=h);"button"!==h.type&&(d=Value.getExcess(a),k[3]-=d[0],k[4]-=d[1]);break;case "EExternalHtml":k[1]!==e[1]&&a.parentNode.replaceChild(j(k),a)}k[3]!==e[3]&&
-(a.style.width=~~k[3]+"px");k[4]!==e[4]&&(a.style.height=~~k[4]+"px");k[5]!==e[5]&&(a.style.opacity=k[5]);2===k[6].length&&(d=Elm.Color.extract(k[6][1]),d!==a.style.backgroundColor&&(a.style.backgroundColor=d));if(2===k[7].length&&(1===e[7].length||k[7][1]!==e[7][1]))a.parentNode.href=k[7][1];k[1]=e[1]}}return{render:j,update:l,addTo:function(a,b){a.appendChild(b)},newElement:d,flowWith:h,goIn:c}}();
-Elm.Signal=function(){function d(a){this.id=Guid.guid();this.value=a;this.kids=[];this.defaultNumberOfKids=0;this.recv=function(a,b,e){if(b=b===this.id)this.value=e;l(this,a,b);return b};Dispatcher.inputs.push(this)}function f(a,b){this.id=Guid.guid();this.value=null;this.kids=[];this.count=0;this.changed=!1;b.reverse();this.recalc=function(){for(var c=a,d=b.length;d--;)c=c(b[d].value);this.value=c};this.recalc();this.recv=function(a,e){this.count+=1;e&&(this.changed=!0);this.count==b.length&&(this.changed&&
-this.recalc(),l(this,a,this.changed),this.changed=!1,this.count=0)};for(var c=b.length;c--;)b[c].kids.push(this)}function b(a,b,c,d){this.id=Guid.guid();this.value=c?b(d.value):b;this.kids=[];this.recv=function(b,c){c&&(this.value=a(d.value)(this.value));l(this,b,c)};d.kids.push(this)}function c(a,b,c){this.id=Guid.guid();this.value=a(c.value)?b:c.value;this.kids=[];this.recv=function(b,d){var f=d&&!a(c.value);f&&(this.value=c.value);l(this,b,f)};c.kids.push(this)}function h(a){this.id=Guid.guid();
-this.value=a.value;this.kids=[];this.recv=function(b,c){var d=c&&!Value.eq(this.value,a.value);d&&(this.value=a.value);l(this,b,d)};a.kids.push(this)}function a(a,b){this.id=Guid.guid();var c=(new window.Date).getTime();this.value=a?Value.Tuple(c,b.value):c;this.kids=[];this.recv=function(c,d){d&&(this.value=a?Value.Tuple(c,b.value):c);l(this,c,d)};b.kids.push(this)}function m(a,b){this.id=Guid.guid();this.value=b.value;this.kids=[];this.count=0;this.changed=!1;this.recv=function(c,d,f){f===a.id&&
-(this.changed=d);this.count+=1;2==this.count&&(this.changed&&(this.value=b.value),l(this,c,this.changed),this.count=0,this.changed=!1)};a.kids.push(this);b.kids.push(this)}function j(a,b){this.id=Guid.guid();this.value=a.value;this.kids=[];this.next=null;this.count=0;this.changed=!1;this.recv=function(c,d,f){this.count+=1;d&&(this.changed=!0,f==b.id&&null===this.next&&(this.next=b.value),f==a.id&&(this.next=a.value));2==this.count&&(this.changed&&(this.value=this.next,this.next=null),l(this,c,this.changed),
-this.changed=!1,this.count=0)};a.kids.push(this);b.kids.push(this)}var l=function(a,b,c){for(var d=a.kids,f=d.length;f--;)d[f].recv(b,c,a.id)},g=function(a){return function(b){return function(d){d=new f(function(a){return function(b){return[a,b]}},[a,d]);d=new c(function(a){return a[0]},[!0,b],d);return new f(function(a){return a[1]},[d])}}};return{constant:function(a){return new d(a)},lift:function(a){return function(b){return new f(a,[b])}},lift2:function(a){return function(b){return function(c){return new f(a,
-[b,c])}}},lift3:function(a){return function(b){return function(c){return function(d){return new f(a,[b,c,d])}}}},lift4:function(a){return function(b){return function(c){return function(d){return function(j){return new f(a,[b,c,d,j])}}}}},lift5:function(a){return function(b){return function(c){return function(d){return function(j){return function(g){return new f(a,[b,c,d,j,g])}}}}}},lift6:function(a){return function(b){return function(c){return function(d){return function(j){return function(g){return function(h){return new f(a,
-[b,c,d,j,g,h])}}}}}}},lift7:function(a){return function(b){return function(c){return function(d){return function(j){return function(g){return function(h){return function(l){return new f(a,[b,c,d,j,g,h,l])}}}}}}}},lift8:function(a){return function(b){return function(c){return function(d){return function(j){return function(g){return function(h){return function(l){return function(m){return new f(a,[b,c,d,j,g,h,l,m])}}}}}}}}},foldp:function(a){return function(c){return function(d){return new b(a,c,!1,
-d)}}},foldp$:function(a){return function(c){return function(d){return new b(a,c,!0,d)}}},foldp1:function(a){return function(c){return new b(a,function(a){return a},!0,c)}},delay:function(a){return function(b){var c=new d(b.value),j=!0;b=new m(c,new f(function(a){return function(){return a}},[c,new f(function(b){j||setTimeout(function(){Dispatcher.notify(c.id,b)},a)},[b])]));j=!1;return b}},merge:function(a){return function(b){return new j(a,b)}},merges:function(a){return Elm.List.foldl1(function(a){return function(b){return new j(a,
-b)}})(a)},mergeEither:function(a){return function(b){function c(a){return function(b){return[a,b]}}return new j(new f(c("Left"),[a]),new f(c("Right"),[b]))}},average:function(a){return function(b){for(var c=Array(a),d=a;d--;)c[d]=0;var d=0,j=!1,g=0;return new f(function(b){g+=b-c[d];c[d]=b;b=g/Math.max(1,j?a:d);++d==a&&(j=!0,d=0);return b},[b])}},count:function(a){return new b(function(){return function(a){return a+1}},0,!1,a)},countIf:function(a){return function(c){return new b(function(b){return function(c){return a(b)?
-c+1:c}},0,!1,c)}},keepIf:function(a){return function(b){return function(d){return new c(function(b){return!a(b)},b,d)}}},dropIf:function(a){return function(b){return function(d){return new c(a,b,d)}}},keepWhen:function(a){return g(new f(function(a){return!a},[a]))},dropWhen:g,dropRepeats:function(a){return new h(a)},sampleOn:function(a){return function(b){return new m(a,b)}},timestamp:function(b){return new a(!0,b)},timeOf:function(b){return new a(!1,b)}}}();
-var Dispatcher=function(){function d(b){if(!b.hasOwnProperty("defaultNumberOfKids"))return!0;var a=b.kids.length;if(0==a)return!1;if(a>b.defaultNumberOfKids)return!0;for(var c=!1;a--;)c=c||d(b.kids[a]);return c}var f=null,b=[],c=null;return{initialize:function(){f=Elm.main();f.hasOwnProperty("recv")||(f=Elm.Signal.constant(f));c=f.value;for(var h=[],a=b.length;a--;)d(b[a])&&h.push(b[a]);b=h;document.getElementById("content").appendChild(Render.render(c));h=document.getElementById("widthChecker").offsetWidth;
-h!==window.innerWidth&&Dispatcher.notify(Elm.Window.dimensions.id,Value.Tuple(h,window.innerHeight));f=Elm.Signal.lift(function(a){var b=document.getElementById("content");Render.update(b.firstChild,c,a);return c=a})(f)},notify:function(c,a){for(var d=(new window.Date).getTime(),f=!1,l=b.length;l--;)f=b[l].recv(d,c,a)||f;return f},inputs:b}}();
-Elm.HTTP=function(){function d(b){return function(c){return function(d){return function(e){return{"0":"Request",length:1,verb:a.castStringToJSString(b),url:a.castStringToJSString(c),data:null===d?null:a.castStringToJSString(d),headers:e}}}}}function f(a){return d("GET")(a)(null)(["Nil"])}function b(b,d){return function(f){if(""!==f.url){var e={value:["Waiting"]};b.push(e);var h=null;window.ActiveXObject&&(h=new ActiveXObject("Microsoft.XMLHTTP"));window.XMLHttpRequest&&(h=new XMLHttpRequest);h.onreadystatechange=
-function(){4===h.readyState&&(e.value=200===h.status?["Success",m(h.responseText)]:["Failure",h.status,m(h.statusText)],setTimeout(function(){c(b,d)},0))};h.open(f.verb,f.url,!0);Elm.List.map(function(b){h.setRequestHeader(a.castStringToJSString(b[1]),a.castStringToJSString(b[2]))})(f.headers);h.send(f.data)}}}function c(a,b){0<a.length&&(Dispatcher.notify(b.id,a[0].value),"Waiting"!==a[0].value[0]&&(a.shift(),setTimeout(function(){c(a,b)},0)))}function h(a){var c=Elm.Signal.constant(["Waiting"]);
-a=Elm.Signal.lift(b([],c))(a);return Elm.Signal.lift2(function(a){return function(){return a}})(c)(a)}var a=Elm.JavaScript,m=Elm.JavaScript.castJSStringToString;return{get:f,post:function(a){return function(b){return d("POST")(a)(b)(["Nil"])}},request:d,send:h,sendGet:function(a){return h(Elm.Signal.lift(f)(a))}}}();
-Elm.Input=function(){var d=Elm.JavaScript,f=Elm.JavaScript.castJSStringToString,b=function(a,b){a.placeholder=d.castStringToJSString(b);var c=Elm.Signal.constant(["Nil"]);Value.addListener(a,"keyup",function(){Dispatcher.notify(c.id,f(a.value));a.focus()});a.style.padding="1px";return Value.Tuple(Value.wrap(a),c)},c=function(a){a=document.createElement(a);a.style.padding="0";a.style.margin="0";return a},h=function(a){for(var b=c("select"),d=[];"Cons"===a[0];){var f=c("option"),h=Value.toText(a[1][1]);
-f.value=h;f.innerHTML=h;b.appendChild(f);d.push(a[1][2]);a=a[2]}var e=Elm.Signal.constant(d[0]);Value.addListener(b,"change",function(){Dispatcher.notify(e.id,d[b.selectedIndex])});return Value.Tuple(Value.wrap(b),e)};return{textArea:function(a){return function(d){var f=c("textarea");f.rows=d;f.cols=a;return b(f,"")}},textField:function(a){var d=c("input");d.type="text";return b(d,a)},password:function(a){var d=c("input");d.type="password";return b(d,a)},checkbox:function(a){var b=c("input");b.type=
-"checkbox";b.checked=a;var d=Elm.Signal.constant(a);Value.addListener(b,"change",function(){Dispatcher.notify(d.id,b.checked)});return Value.Tuple(Value.wrap(b),d)},dropDown:h,stringDropDown:function(a){return h(Elm.List.map(function(a){return Value.Tuple(a,a)})(a))},button:function(a){var b=c("input");b.type="button";b.value=d.castStringToJSString(a);var f=Elm.Signal.constant(!1);Value.addListener(b,"click",function(){Dispatcher.notify(f.id,!0);Dispatcher.notify(f.id,!1)});return Value.Tuple(Value.wrap(b),
-f)}}}();
-Elm.Keyboard={Raw:function(){function d(b,f){return"Nil"===f[0]?f:f[1]===b?f[2]:["Cons",f[1],d(b,f[2])]}var f=Elm.Signal.constant(["Nil"]),b=Elm.Signal.constant(["Nothing"]);Value.addListener(document,"keydown",function(b){var d;a:{for(d=f.value;"Nil"!==d[0];){if(d[1]===b.keyCode){d=!0;break a}d=d[2]}d=!1}d||Dispatcher.notify(f.id,["Cons",b.keyCode,f.value])||this.removeEventListener("keydown",arguments.callee,!1)});Value.addListener(document,"keyup",function(b){var h=d(b.keyCode,f.value);Dispatcher.notify(f.id,
-h)||this.removeEventListener("keyup",arguments.callee,!1)});Value.addListener(window,"blur",function(b){Dispatcher.notify(f.id,["Nil"])||this.removeEventListener("blur",arguments.callee,!1)});Value.addListener(document,"keypress",function(c){var d=Dispatcher.notify(b.id,["Just",c.charCode||c.keyCode]);Dispatcher.notify(b.id,["Nothing"]);d||this.removeEventListener("keypress",arguments.callee,!1)});return{keysDown:f,charPressed:b}}()};
-(function(){function d(b){b=Elm.Signal.lift(b)(Elm.Keyboard.Raw.keysDown);Elm.Keyboard.Raw.keysDown.defaultNumberOfKids+=1;b.defaultNumberOfKids=0;return b}function f(b,f,a,m){return d(function(d){for(var l=0,g=0;"Cons"==d[0];){switch(d[1]){case b:--l;break;case f:++l;break;case a:++g;break;case m:--g}d=d[2]}return{_:[!0],x:[l],y:[g]}})}function b(b){return d(function(d){for(;"Cons"==d[0];){if(b==d[1])return!0;d=d[2]}return!1})}Elm.Keyboard.arrows=f(37,39,38,40);Elm.Keyboard.wasd=f(65,68,87,83);Elm.Keyboard.shift=
-b(16);Elm.Keyboard.ctrl=b(17);Elm.Keyboard.space=b(32)})();
-Elm.Mouse=function(){function d(a){var b=0,c=0;a||(a=window.event);if(a.pageX||a.pageY)b=a.pageX,c=a.pageY;else if(a.clientX||a.clientY)b=a.clientX+document.body.scrollLeft+document.documentElement.scrollLeft,c=a.clientY+document.body.scrollTop+document.documentElement.scrollTop;return Value.Tuple(b,c)}var f=Elm.Signal.constant(Value.Tuple(0,0));f.defaultNumberOfKids=2;var b=Elm.Signal.lift(function(a){return a[1]})(f);b.defaultNumberOfKids=0;var c=Elm.Signal.lift(function(a){return a[2]})(f);c.defaultNumberOfKids=
-0;var h=Elm.Signal.constant(!1),a=Elm.Signal.constant(!1),m=Elm.Signal.constant(Value.Tuple());Value.addListener(document,"click",function(b){var c=Dispatcher.notify(a.id,!0),d=Dispatcher.notify(m.id,Value.Tuple());Dispatcher.notify(a.id,!1);!c&&!d&&this.removeEventListener("click",arguments.callee,!1)});Value.addListener(document,"mousedown",function(a){Dispatcher.notify(h.id,!0)||this.removeEventListener("mousedown",arguments.callee,!1)});Value.addListener(document,"mouseup",function(a){Dispatcher.notify(h.id,
-!1)||this.removeEventListener("mouseup",arguments.callee,!1)});Value.addListener(document,"mousemove",function(a){Dispatcher.notify(f.id,d(a))||this.removeEventListener("mousemove",arguments.callee,!1)});return{position:f,x:b,y:c,isClicked:a,isDown:h,clicks:m,isClickedOn:function(a){a=Render.render(a);var b=Elm.Signal.constant(!1);Value.addListener(a,"click",function(){Dispatcher.notify(b.id,!0);Dispatcher.notify(b.id,!1)});return Value.Tuple(Value.wrap(a),b)}}}();
-Elm.Random=function(){return{inRange:function(d){return function(f){return Elm.Signal.constant(Math.floor(Math.random()*(f-d+1))+d)}},randomize:function(d){return function(f){return function(b){return Elm.Signal.lift(function(){return Math.floor(Math.random()*(f-d+1))+d})(b)}}}}}();
-Elm.Time=function(){function d(){return(new window.Date).getTime()}function f(b){return function(c){var f=1E3/b,a=d(),m=a,j=0,l=!0,g=Elm.Signal.constant(j),e=0;return Elm.Signal.lift2(function(b){return function(c){if(b){var n=!l&&b;e=setTimeout(function(){m=d();j=n?0:m-a;a=m;Dispatcher.notify(g.id,j)},f)}else l&&clearTimeout(e);l=b;return c}})(c)(g)}}Elm.Signal.constant(!0);return{fpsWhen:f,fps:function(b){return f(b)(Elm.Signal.constant(!0))},every:function(b){var c=Elm.Signal.constant(d());setInterval(function(){Dispatcher.notify(c.id,
-d())},b);return c},delay:Elm.Signal.delay,since:function(b){return function(c){var d=Elm.Signal.count(Elm.Signal.delay(b)(c));return Elm.Signal.lift2(function(a){return function(b){return!Value.eq(a,b)}})(Elm.Signal.count(c))(d)}},after:function(b){b*=1E3;var c=Elm.Signal.constant(!1);setTimeout(function(){Dispatcher.notify(c.id,!0)},b);return c},before:function(b){b*=1E3;var c=Elm.Signal.constant(!0);setTimeout(function(){Dispatcher.notify(c.id,!1)},b);return c},hour:36E5,minute:6E4,second:1E3,ms:1,
-inHours:function(b){return b/36E5},inMinutes:function(b){return b/6E4},inSeconds:function(b){return b/1E3},inMss:function(b){return b},toDate:function(b){return new window.Date(b)},read:function(b){b=window.Date.parse(b);return isNaN(b)?["Nothing"]:["Just",b]}}}();
-Elm.Window=function(){var d=Elm.Signal.constant(Value.Tuple(window.innerWidth,window.innerHeight));d.defaultNumberOfKids=2;var f=Elm.Signal.lift(function(b){return b[1]})(d);f.defaultNumberOfKids=0;var b=Elm.Signal.lift(function(b){return b[2]})(d);b.defaultNumberOfKids=0;Value.addListener(window,"resize",function(b){var f=document.getElementById("widthChecker").offsetWidth;Dispatcher.notify(d.id,Value.Tuple(f,window.innerHeight))||this.removeEventListener("resize",arguments.callee,!1)});return{dimensions:d,
-width:f,height:b}}();
-Elm.Date=function(){var d="Sun Mon Tue Wed Thu Fri Sat".split(" "),f="Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" ");return{read:function(b){b=new window.Date(Elm.JavaScript.castStringToJSString(b));return isNaN(b.getTime())?["Nothing"]:["Just",b]},year:function(b){return b.getFullYear()},month:function(b){return[f[b.getMonth()]]},day:function(b){return b.getDate()},hour:function(b){return b.getHours()},minute:function(b){return b.getMinutes()},second:function(b){return b.getSeconds()},dayOfWeek:function(b){return[d[b.getDay()]]},
-toTime:function(b){return b.getTime()},Mon:["Mon"],Tue:["Tue"],Wed:["Wed"],Thu:["Thu"],Fri:["Fri"],Sat:["Sat"],Sun:["Sun"],Jan:["Jan"],Feb:["Feb"],Mar:["Mar"],Apr:["Apr"],May:["May"],Jun:["Jun"],Jul:["Jul"],Aug:["Aug"],Sep:["Sep"],Oct:["Oct"],Nov:["Nov"],Dec:["Dec"]}}();Value.addListener(document,"elm_log",function(d){console.log(d.value)});Value.addListener(document,"elm_title",function(d){document.title=d.value});
-Value.addListener(document,"elm_redirect",function(d){0<d.value.length&&(window.location=d.value)});Value.addListener(document,"elm_viewport",function(d){var f=document.getElementById("elm_viewport");f||(f=document.createElement("meta"),f.id="elm_viewport",f.name="viewport",document.head.appendChild(f));f.content=d.value;Dispatcher.notify(Elm.Window.dimensions.id,Value.Tuple(window.innerWidth,window.innerHeight))});
-Elm.Prelude=function(){function d(b){return function(c){if(b instanceof Array&&c instanceof Array){var f=b.length;if(f==c.length){for(var a=1;a<f;++a){var m=d(b[a])(c[a]);if("EQ"!==m[0])return m}return["EQ"]}return[1==c.length?"GT":"LT"]}return[b===c?"EQ":b<c?"LT":"GT"]}}var f=function(b){return function(c){var d=b%c,d=0==b?0:0<c?0<=b?d:d+c:-f(-b)(-c);return d==c?0:d}};return{eq:Value.eq,id:function(b){return b},not:function(b){return!b},xor:function(b){return function(c){return b!=c}},fst:function(b){return b[1]},
-snd:function(b){return b[2]},rem:function(b){return function(c){return b%c}},div:function(b){return function(c){return~~(b/c)}},otherwise:!0,compare:d,toFloat:function(b){return b},round:function(b){return Math.round(b)},floor:function(b){return Math.floor(b)},ceiling:function(b){return Math.ceil(b)},truncate:function(b){return~~b},readInt:function(b){b=Elm.JavaScript.castStringToJSString(b);var c=b.length;if(0===c)return["Nothing"];var d=0;if("-"==b[0]){if(1===c)return["Nothing"];d=1}for(;d<c;++d)if(!Elm.Char.isDigit(b[d]))return["Nothing"];
-return["Just",parseInt(b)]},readFloat:function(b){b=Elm.JavaScript.castStringToJSString(b);var c=b.length;if(0===c)return["Nothing"];var d=0;if("-"==b[0]){if(1===c)return["Nothing"];d=1}for(var a=0;d<c;++d)if(!Elm.Char.isDigit(b[d])){if("."===b[d]&&(a+=1,1>=a))continue;return["Nothing"]}return["Just",parseFloat(b)]},sqrt:Math.sqrt,abs:Math.abs,pi:Math.PI,e:Math.E,sin:Math.sin,cos:Math.cos,tan:Math.tan,asin:Math.asin,acos:Math.acos,atan:Math.atan,atan2:function(b){return function(c){return Math.atan2(b,
-c)}},mod:f,min:function(b){return function(c){return Math.min(b,c)}},max:function(b){return function(c){return Math.max(b,c)}},flip:function(b){return function(c){return function(d){return b(d)(c)}}},clamp:function(b){return function(c){return function(d){return Math.min(c,Math.max(b,d))}}},curry:function(b){return function(c){return function(d){return b(["Tuple2",c,d])}}},uncurry:function(b){return function(c){if("Tuple2"!==c[0])throw"Function was uncurry'd but was not given a pair.";return b(c[1])(c[2])}},
-logBase:function(b){return function(c){return Math.log(c)/Math.log(b)}},Just:Elm.Maybe.Just,Nothing:Elm.Maybe.Nothing,maybe:Elm.Maybe.maybe,map:Elm.List.map,zip:Elm.List.zip,zipWith:Elm.List.zipWith,filter:Elm.List.filter,head:Elm.List.head,tail:Elm.List.tail,last:Elm.List.last,length:Elm.List.length,reverse:Elm.List.reverse,foldr:Elm.List.foldr,foldr1:Elm.List.foldr1,foldl:Elm.List.foldl,foldl1:Elm.List.foldl1,and:Elm.List.and,or:Elm.List.or,all:Elm.List.all,any:Elm.List.any,sum:Elm.List.sum,product:Elm.List.product,
-concat:Elm.List.concat,concatMap:Elm.List.concatMap,maximum:Elm.List.maximum,minimum:Elm.List.minimum,scanl:Elm.List.scanl,scanl1:Elm.List.scanl1,take:Elm.List.take,drop:Elm.List.drop,zip:Elm.List.zip,unzip:Elm.List.unzip,lift:Elm.Signal.lift,lift2:Elm.Signal.lift2,lift3:Elm.Signal.lift3,lift4:Elm.Signal.lift4,lift5:Elm.Signal.lift5,lift6:Elm.Signal.lift6,lift7:Elm.Signal.lift7,lift8:Elm.Signal.lift8,foldp:Elm.Signal.foldp,foldp1:Elm.Signal.foldp1,foldp$:Elm.Signal.foldp$,constant:Elm.Signal.constant,
-merge:Elm.Signal.merge,merges:Elm.Signal.merges,mergeEither:Elm.Signal.mergeEither,count:Elm.Signal.count,countIf:Elm.Signal.countIf,average:Elm.Signal.average,keepIf:Elm.Signal.keepIf,dropIf:Elm.Signal.dropIf,keepWhen:Elm.Signal.keepWhen,dropWhen:Elm.Signal.dropWhen,dropRepeats:Elm.Signal.dropRepeats,sampleOn:Elm.Signal.sampleOn,timestamp:Elm.Signal.timestamp,timeOf:Elm.Signal.timeOf}}();
-(function(){var d=function(d){for(var b in d)Elm.Prelude[b]=d[b]};d(Elm.Color);d(Elm.Text);d(Elm.Graphics);d(Elm.Time);show=Value.show})();
-Elm.Touch=function(){function d(b){b=j.remove(b.identifier);Date.now()-b.t<h&&(a=!0,m={_:[!0],x:[b.x],y:[b.y]})}function f(a,b){function d(f){for(var g=f.changedTouches.length;g--;)b(f.changedTouches[g]);for(var h=Array(f.touches.length),g=f.touches.length;g--;){var l=h,m=g,r=f.touches[g],q=j.lookup(r.identifier);l[m]={_:[!0],id:[r.identifier],x:[r.pageX],y:[r.pageY],x0:[q.x],y0:[q.y],t0:[q.t]}}if(!Dispatcher.notify(c.id,h))return document.removeEventListener(a,d);f.preventDefault()}Value.addListener(document,
-a,d)}function b(a){a=Elm.Signal.lift(a)(c);c.defaultNumberOfKids+=1;a.defaultNumberOfKids=0;return a}var c=Elm.Signal.constant([]),h=500,a=!1,m={_:[!0],x:[0],y:[0]},j=new function(){this.keys=[];this.values=[];this.insert=function(a,b){this.keys.push(a);this.values.push(b)};this.lookup=function(a){a=this.keys.indexOf(a);return 0<=a?this.values[a]:{x:0,y:0,t:0}};this.remove=function(a){a=this.keys.indexOf(a);if(!(0>a)){var b=this.values[a];this.keys.splice(a,1);this.values.splice(a,1);return b}}};
-f("touchstart",function(a){j.insert(a.identifier,{x:a.pageX,y:a.pageY,t:Date.now()})});f("touchmove",function(){});f("touchend",d);f("touchcancel",d);f("touchleave",d);var l=b(function(a){return Elm.JavaScript.castJSArrayToList(a)}),g=b(function(){return m});g.defaultNumberOfKids=1;g=Elm.Signal.keepIf(function(){var b=a;a=!1;return b})({_:[!0],x:[0],y:[0]})(g);g.defaultNumberOfKids=0;return{touches:l,taps:g}}();
-Elm.Dict=function(){function d(a){return function(b){return function(c){return function(d){return function(e){return["RBNode",a,b,c,d,e]}}}}}function f(a){a:{switch(a[0]){case "RBEmpty":throw"(min RBEmpty) is not defined";case "RBNode":switch(a[4][0]){case "RBEmpty":a=["Tuple2",a[2],a[3]];break a}a=f(a[4]);break a}throw"Non-exhaustive pattern match in case";}return a}function b(a){return function(c){var d;a:{switch(c[0]){case "RBEmpty":d=w;break a;case "RBNode":d=function(){switch(q(a)(c[2])[0]){case "EQ":return z(c[3]);
-case "GT":return b(a)(c[5]);case "LT":return b(a)(c[4])}throw"Non-exhaustive pattern match in case";}();break a}throw"Non-exhaustive pattern match in case";}return d}}function c(a){return function(b){return function(d){var e;a:{switch(d[0]){case "RBEmpty":e=a;break a;case "RBNode":e=function(){switch(q(b)(d[2])[0]){case "EQ":return d[3];case "GT":return c(a)(b)(d[5]);case "LT":return c(a)(b)(d[4])}throw"Non-exhaustive pattern match in case";}();break a}throw"Non-exhaustive pattern match in case";
-}return e}}}function h(a){return function(c){return F(b(a)(c))}}function a(a){a:{switch(a[0]){case "RBNode":switch(a[5][0]){case "RBNode":a=d(a[1])(a[5][2])(a[5][3])(d(B)(a[2])(a[3])(a[4])(a[5][4]))(a[5][5]);break a}}throw"rotateLeft of a node without enough children";}return a}function m(a){a:{switch(a[0]){case "RBNode":switch(a[4][0]){case "RBNode":a=d(a[1])(a[4][2])(a[4][3])(a[4][4])(d(B)(a[2])(a[3])(a[4][5])(a[5]));break a}}throw"rotateRight of a node without enough children";}return a}function j(a){a:{switch(a[0]){case "Black":a=
-B;break a;case "Red":a=E;break a}throw"Non-exhaustive pattern match in case";}return a}function l(a){a:{switch(a[0]){case "RBNode":switch(a[4][0]){case "RBNode":switch(a[5][0]){case "RBNode":a=d(j(a[1]))(a[2])(a[3])(d(j(a[4][1]))(a[4][2])(a[4][3])(a[4][4])(a[4][5]))(d(j(a[5][1]))(a[5][2])(a[5][3])(a[5][4])(a[5][5]));break a}}}throw"color_flip called on a RBEmpty or RBNode with a RBEmpty child";}return a}function g(b){a:switch(b[0]){case "RBNode":switch(b[5][0]){case "RBNode":switch(b[5][1][0]){case "Red":b=
-a(b);break a}}}a:switch(b[0]){case "RBNode":switch(b[4][0]){case "RBNode":switch(b[4][1][0]){case "Red":switch(b[4][4][0]){case "RBNode":switch(b[4][4][1][0]){case "Red":b=m(b);break a}}}}}a:switch(b[0]){case "RBNode":switch(b[4][0]){case "RBNode":switch(b[4][1][0]){case "Red":switch(b[5][0]){case "RBNode":switch(b[5][1][0]){case "Red":b=l(b);break a}}}}}return b}function e(a){a:switch(a[0]){case "RBNode":switch(a[1][0]){case "Red":a=d(E)(a[2])(a[3])(a[4])(a[5]);break a}}return a}function k(a){return function(b){return function(c){var f=
-function(c){var e;a:{switch(c[0]){case "RBEmpty":e=d(B)(a)(b)(A)(A);break a;case "RBNode":e=function(){switch(q(a)(c[2])[0]){case "EQ":return d(c[1])(c[2])(b)(c[4])(c[5]);case "GT":return d(c[1])(c[2])(c[3])(c[4])(f(c[5]));case "LT":return d(c[1])(c[2])(c[3])(f(c[4]))(c[5])}throw"Non-exhaustive pattern match in case";}();e=g(e);break a}throw"Non-exhaustive pattern match in case";}return e};return e(f(c))}}}function x(a){a:{switch(a[0]){case "RBNode":switch(a[4][0]){case "RBNode":switch(a[4][1][0]){case "Red":a=
-!0;break a}}}a=!1}return a}function n(a){a:{switch(a[0]){case "RBNode":switch(a[4][0]){case "RBNode":switch(a[4][4][0]){case "RBNode":switch(a[4][4][1][0]){case "Red":a=!0;break a}}}}a=!1}return a}function p(b){if(y(x(b))&&y(n(b))){b=l(b);a:switch(b[0]){case "RBNode":b:switch(b[5][0]){case "RBNode":switch(b[5][4][0]){case "RBNode":switch(b[5][4][1][0]){case "Red":b=l(a(d(b[1])(b[2])(b[3])(b[4])(m(b[5]))));break b}}}break a}}return b}function s(a){return function(b){var c=function(b){a:{switch(b[0]){case "RBEmpty":b=
-A;break a;case "RBNode":if("LT"===q(a)(b[2])[0])b:{b=p(b);switch(b[0]){case "RBEmpty":throw"delLT on RBEmpty";case "RBNode":b=g(d(b[1])(b[2])(b[3])(c(b[4]))(b[5]));break b}break}else{var h=x(b)?m(b):b,j;b:{switch(h[0]){case "RBNode":switch(h[5][0]){case "RBEmpty":j=D(a,h[2]);break b}}j=!1}if(j)b=h[4];else{h=y;b:{switch(b[0]){case "RBNode":switch(b[5][0]){case "RBNode":switch(b[5][1][0]){case "Red":j=!0;break b}}}j=!1}if(h=h(j)){h=y;b:{switch(b[0]){case "RBNode":switch(b[5][0]){case "RBNode":switch(b[5][4][0]){case "RBNode":switch(b[5][4][1][0]){case "Red":j=
-!0;break b}}}}j=!1}h=h(j)}h&&(b=l(b),b=n(b)?l(m(b)):b);b:{switch(b[0]){case "RBNode":h=D(a,b[2]);break b}h=!1}if(h)b:{switch(b[0]){case "RBEmpty":throw"delEQ called on a RBEmpty";case "RBNode":j=f(b[5]);c:{switch(j[0]){case "Tuple2":h=j[1];break c}break}c:{switch(j[0]){case "Tuple2":j=j[2];break c}break}var h=d(b[1])(h)(j)(b[4]),k=function(a){a:{switch(a[0]){case "RBNode":switch(a[4][0]){case "RBEmpty":a=A;break a}}b:{a=p(a);switch(a[0]){case "RBEmpty":a=A;break b;case "RBNode":a=g(d(a[1])(a[2])(a[3])(k(a[4]))(a[5]));
-break b}throw"Non-exhaustive pattern match in case";}}return a};b=e(k(b[5]));b=g(h(b));break b}break}else b:{switch(b[0]){case "RBEmpty":throw"delGT called on a RBEmpty";case "RBNode":b=g(d(b[1])(b[2])(b[3])(b[4])(c(b[5])));break b}break}}}break a}throw"Non-exhaustive pattern match in case";}return b};return h(a)(b)?e(c(b)):b}}function v(a){return function(b){a:{switch(b[0]){case "RBEmpty":b=A;break a;case "RBNode":b=d(b[1])(b[2])(a(b[3]))(v(a)(b[4]))(v(a)(b[5]));break a}throw"Non-exhaustive pattern match in case";
-}return b}}function t(a){return function(b){return function(c){a:{switch(c[0]){case "RBEmpty":c=b;break a;case "RBNode":c=t(a)(a(c[2])(c[3])(t(a)(b)(c[4])))(c[5]);break a}throw"Non-exhaustive pattern match in case";}return c}}}function r(a){return function(b){return function(c){a:{switch(c[0]){case "RBEmpty":c=b;break a;case "RBNode":c=r(a)(a(c[2])(c[3])(r(a)(b)(c[5])))(c[4]);break a}throw"Non-exhaustive pattern match in case";}return c}}}var q=Elm.Prelude.compare,u=Elm.Prelude.uncurry,w=Elm.Prelude.Nothing,
-z=Elm.Prelude.Just,y=Elm.Prelude.not,D=Elm.Prelude.eq,F=Elm.Maybe.isJust,B=["Red"],E=["Black"],A=["RBEmpty"],C=A;return{$op:{},empty:C,lookup:b,findWithDefault:c,member:h,insert:k,singleton:function(a){return function(b){return k(a)(b)(A)}},remove:s,map:v,foldl:t,foldr:r,union:function(a){return function(b){return t(k)(b)(a)}},intersect:function(a){return function(b){return t(function(a){return function(c){return function(d){return h(a)(b)?k(a)(c)(d):d}}})(C)(a)}},diff:function(a){return function(b){return t(function(a){return function(){return function(b){return s(a)(b)}}})(a)(b)}},
-keys:function(a){return r(function(a){return function(){return function(b){return["Cons",a,b]}}})(["Nil"])(a)},values:function(a){return r(function(){return function(a){return function(b){return["Cons",a,b]}}})(["Nil"])(a)},toList:function(a){return r(function(a){return function(b){return function(c){return["Cons",["Tuple2",a,b],c]}}})(["Nil"])(a)},fromList:function(a){return Elm.List.foldl(u(k))(C)(a)}}}();
-Elm.Set=function(){var d=Elm.Dict.empty,f=Elm.Dict.remove,b=Elm.Dict.member,c=Elm.Dict.union,h=Elm.Dict.intersect,a=Elm.Dict.diff,m=Elm.Dict.keys,j=Elm.List.foldl(function(a){return function(b){return Elm.Dict.insert(a)(["Tuple0"])(b)}})(d);return{empty:d,singleton:function(a){return Elm.Dict.singleton(a)(["Tuple0"])},insert:function(a){return Elm.Dict.insert(a)(["Tuple0"])},remove:f,member:b,union:c,intersect:h,diff:a,toList:m,fromList:j,foldl:function(a){return Elm.Dict.foldl(function(b){return function(){return function(c){return a(b)(c)}}})},
-foldr:function(a){return Elm.Dict.foldr(function(b){return function(){return function(c){return a(b)(c)}}})},map:function(a){return function(b){b=m(b);return j(Elm.List.map(a)(b))}}}}();
-(function(){try{var d={};for(this.i in Elm)eval("var "+this.i+"=Elm[this.i];");if(Elm.Automaton)throw"Module name collision, 'Automaton' is already defined.";Elm.Automaton=function(){function b(a){return["Automaton",a]}function c(a){return b(function(b){var d=unzip(map(function(a){a:{switch(a[0]){case "Automaton":a=a[1](b);break a}throw"Non-exhaustive pattern match in case";}return a})(a)),e;a:{switch(d[0]){case "Tuple2":e=d[1];break a}throw"Non-exhaustive pattern match in case";}a:{switch(d[0]){case "Tuple2":d=
-d[2];break a}throw"Non-exhaustive pattern match in case";}return["Tuple2",e,c(d)]})}function f(a){return b(function(b){return["Tuple2",a(b),f(a)]})}function a(c){return function(d){return b(function(b){b=d(b)(c);return["Tuple2",b,a(b)(d)]})}}function m(a){return function(c){return b(function(b){var d=c(b)(a);a:{switch(d[0]){case "Tuple2":b=d[1];break a}throw"Non-exhaustive pattern match in case";}a:{switch(d[0]){case "Tuple2":d=d[2];break a}throw"Non-exhaustive pattern match in case";}return["Tuple2",
-b,m(d)(c)]})}}function j(a){return function(b){a:{switch(a[0]){case "Tuple2":b:{switch(b[0]){case "Tuple2":b=["Tuple2",a[1]-b[1],a[2]-b[2]];break b}break}break a}throw"Non-exhaustive pattern match in case";}return b}}function l(a){return function(b){var c;a:{switch(a[0]){case "Tuple2":b:{switch(b[0]){case "Tuple2":var d=function(a){return["Tuple2",b[2],["Tuple2",a,b[2]]]};c=function(){switch(b[1][0]){case "DragFrom":var c;a[1]?c=["Tuple2",uncurry(move)(j(a[2])(b[1][1]))(b[2]),["Tuple2",["DragFrom",
-b[1][1]],b[2]]]:(c=uncurry(move)(j(a[2])(b[1][1]))(b[2]),c=["Tuple2",c,["Tuple2",k,c]]);return c;case "Ignore":return d(a[1]?x:k);case "Listen":return d(not(a[1])?k:isWithin(a[2])(b[2])?["DragFrom",a[2]]:x)}throw"Non-exhaustive pattern match in case";}();break b}break}break a}throw"Non-exhaustive pattern match in case";}return c}}try{if(!(Elm.Prelude instanceof Object))throw"module not found";}catch(g){throw"Module 'Prelude' is missing. Compile with --make flag or load missing module in a separate JavaScript file.";
-}var e={};for(this.i in Elm.Prelude)e[this.i]||eval("var "+this.i+" = Elm.Prelude[this.i];");var k=["Listen"],x=["Ignore"];d[">>>"]=function(a){return function(c){var e;a:{switch(a[0]){case "Automaton":e=a[1];break a}throw"Non-exhaustive pattern match in case";}var f;a:{switch(c[0]){case "Automaton":f=c[1];break a}throw"Non-exhaustive pattern match in case";}return b(function(a){a=e(a);var b;a:{switch(a[0]){case "Tuple2":b=a[1];break a}throw"Non-exhaustive pattern match in case";}a:{switch(a[0]){case "Tuple2":a=
-a[2];break a}throw"Non-exhaustive pattern match in case";}var c=f(b);a:{switch(c[0]){case "Tuple2":b=c[1];break a}throw"Non-exhaustive pattern match in case";}a:{switch(c[0]){case "Tuple2":c=c[2];break a}throw"Non-exhaustive pattern match in case";}return["Tuple2",b,d[">>>"](a)(c)]})}};d["<<<"]=function(a){return function(b){return d[">>>"](b)(a)}};d["^>>"]=function(a){return function(b){return d[">>>"](f(a))(b)}};d[">>^"]=function(a){return function(b){return d[">>>"](a)(f(b))}};d["^<<"]=function(a){return function(b){return d[">>>"](b)(f(a))}};
-d["<<^"]=function(a){return function(b){return d[">>>"](f(b))(a)}};e=a(0)(function(){return function(a){return 1+a}});return{$op:{">>>":d[">>>"],"<<<":d["<<<"],"^>>":d["^>>"],">>^":d[">>^"],"^<<":d["^<<"],"<<^":d["<<^"]},run:function(a){return function(b){a:{switch(a[0]){case "Automaton":b=lift(fst)(foldp$(function(a){return function(b){a:{switch(b[0]){case "Tuple2":switch(b[2][0]){case "Automaton":b=b[2][1](a);break a}}throw"Non-exhaustive pattern match in case";}return b}})(a[1])(b));break a}throw"Non-exhaustive pattern match in case";
-}return b}},step:function(a){return function(b){a:{switch(a[0]){case "Automaton":b=a[1](b);break a}throw"Non-exhaustive pattern match in case";}return b}},combine:c,pure:f,init:a,init$:m,count:e,draggable:function(a){return m(["Tuple2",k,a])(l)}}}();Elm.main=function(){return Elm.Automaton.main}}catch(f){Elm.main=function(){document.body.innerHTML=Elm.Text.monospace('<br/><h2>Your browser may not be supported. Are you using a modern browser?</h2><br/><span style="color:grey">Runtime Error in Automaton module:<br/>'+
-f+"</span>");throw f;}}})();
+
+Elm = {};
+
+var Guid = function() {
+ var counter = 0;
+ var guid = function() { counter += 1; return counter; };
+ return {guid : guid};
+}();
+Elm.JavaScript = function() {
+  function castJSBoolToBool(b) { return b; }
+  function castBoolToJSBool(b) { return b; }
+
+  function castJSNumberToFloat(n) { return n; }
+  function castFloatToJSNumber(n) { return n; }
+  
+  function castJSNumberToInt(n) { return ~~n; }
+  function castIntToJSNumber(n) { return n; }
+
+  function castJSElementToElement(w) {
+    return function(h) {
+      return function(node) {
+	return ["Element",Guid.guid(),
+		["EExternalHtml",node],
+		w,h,1,["Nothing"],["Nothing"]];
+      }
+    }
+  }
+  function castElementToJSElement(elem) { return Render.render(elem); }
+
+  function castJSArrayToList(arr) {
+      var list = ["Nil"];
+      for (var i = arr.length; i--; ) {
+	  list = [ "Cons", arr[i], list ];
+      }
+      return list;
+  }
+  function castListToJSArray(list) {
+      var a = [];
+      while (list[0] === "Cons") {
+	  a.push(list[1]);
+	  list = list[2];
+      }
+      return a;
+  }
+  
+  var castJSStringToString = castJSArrayToList;
+  function castStringToJSString(str) {
+      if (typeof str === "string") return str;
+      return castListToJSArray(str).join('');
+  }
+  
+  function fromTuple(t) { return t.slice(1); }
+  function toTuple(a) { return ["Tuple" + a.length].concat(a); }
+  
+  return {castJSBoolToBool:castJSBoolToBool,
+	  castBoolToJSBool:castBoolToJSBool,
+	  castJSNumberToFloat:castJSNumberToFloat,
+	  castFloatToJSNumber:castFloatToJSNumber,
+	  castJSNumberToInt:castJSNumberToInt,
+	  castIntToJSNumber:castIntToJSNumber,
+	  Experimental : {castJSElementToElement:castJSElementToElement,
+			  castElementToJSElement:castElementToJSElement},
+	  castJSArrayToList:castJSArrayToList,
+	  castListToJSArray:castListToJSArray,
+	  castJSStringToString:castJSStringToString,
+	  castStringToJSString:castStringToJSString,
+	  castTupleToJSTuple2:fromTuple,
+	  castTupleToJSTuple3:fromTuple,
+	  castTupleToJSTuple4:fromTuple,
+	  castTupleToJSTuple5:fromTuple,
+	  castJSTupleToTuple2:toTuple,
+	  castJSTupleToTuple3:toTuple,
+	  castJSTupleToTuple4:toTuple,
+	  castJSTupleToTuple5:toTuple
+  };
+}();
+
+var JSjson = window.JSON;
+Elm.JSON = function() {
+    var JS = Elm.JavaScript;
+    var empty = ['JSON',{}];
+    function singleton(k) { return function(v) {
+	    var obj = {};
+	    obj[JS.castStringToJSString(k)] = v;
+	    return ['JSON', obj ];
+	};
+    }
+    function insert(k) { return function(v) { return function(inObj) {
+          var obj = inObj[1];
+	  var outObj = {};
+          for (var i in obj) {
+	      outObj[i] = obj[i];
+	  }
+	  outObj[JS.castStringToJSString(k)] = v;
+	  return ['JSON', outObj ];
+        };
+      };
+    }
+
+    function lookup(key) { return function(obj) {
+        var k = JS.castStringToJSString(key);
+        return obj[1].hasOwnProperty(k) ? ["Just", obj[1][k]] : ["Nothing"] ;
+      };
+    }
+    function find(tipe,base) { return function (key) { return function(obj) {
+          var k = JS.castStringToJSString(key);
+          if (obj[1].hasOwnProperty(k)) {
+	    var v = obj[1][k];
+	    if (v[0] === tipe) { return v[1]; }
+          }
+          return base;
+        };
+      }
+    }
+    function lookupWithDefault(base) { return function(key) { return function(obj) {
+          var k = JS.castStringToJSString(key);
+          return obj[1].hasOwnProperty(k) ? obj[1][k] : base ;
+        };
+      };
+    }
+
+    function remove(k) { return function(inObj) {
+        var obj = inObj[1];
+        var outObj = {};
+	for (var i in obj) {
+	    outObj[i] = obj[i];
+	}
+	delete outObj[JS.castStringToJSString(k)];
+	return ['JSON', outObj];
+      };
+    }
+
+    function JsonString(v) { return [ "JsonString", v ]; }
+    function JsonNumber(v) { return [ "JsonNumber", v ]; }
+    function JsonBool(v) { return [ "JsonBool", v ]; }
+    var JsonNull = [ "JsonNull" ];
+    function JsonArray(v) { return [ "JsonArray", v ]; }
+    function JsonObject(v) { return [ "JsonObject", v ]; }
+
+    function toList(json) {
+	var obj = json[1];
+	var arr = [];
+	for (var i in obj) {
+	    arr.push(Value.Tuple(JS.castJSStringToString(i), obj[i]));
+	}
+	return JS.castJSArrayToList(arr);
+    }
+    function fromList(list) {
+	var arr = JS.castListToJSArray(list);
+	var obj = {};
+	for (var i = arr.length; i--; ) {
+	    obj[JS.castStringToJSString(arr[i][1])] = arr[i][2];
+	}
+	return [ "JSON", obj ];
+    }
+
+    function toPrettyJSString(sep) { return function (obj) {
+	function fromValue(v) {
+	    switch (v[0]) {
+	    case 'JsonNull'   : return null;
+	    case 'JsonString' : return JS.castStringToJSString(v[1]);
+	    case 'JsonObject' :
+	    var o = {};
+	    var from = v[1][1];
+	    for (var i in from) {
+		o[i] = fromValue(from[i]);
+	    }
+	    return o;
+	    case 'JsonArray'  :
+	    var a = JS.castListToJSArray(v[1]);
+	    for (var i = a.length; i--; ) {
+		a[i] = fromValue(a[i]);
+	    }
+	    return a;
+	    default :
+	    return v[1];
+	    }
+	}
+	return JSjson.stringify(fromValue([ 'JsonObject', obj ]), null, JS.castStringToJSString(sep));
+      };
+    }
+    function fromJSString(str) {
+	var obj = JSjson.parse(str);
+	function toValue(v) {
+	    switch (typeof v) {
+	    case 'string'  : return [ "JsonString", JS.castJSStringToString(v) ];
+	    case 'number'  : return [ "JsonNumber", JS.castJSNumberToFloat(v) ];
+	    case 'boolean' : return [ "JsonBool", JS.castJSBoolToBool(v) ];
+	    case 'object'  :
+		if (v === null) return [ "JsonNull" ];
+		for (var i in v) {
+		    v[i] = toValue(v[i]);
+		}
+		if (v instanceof Array) return [ "JsonArray", JS.castJSArrayToList(v) ];
+		return [ "JsonObject",  [ "JSON", v ] ];
+	    }
+	}
+	for (var i in obj) {
+	    obj[i] = toValue(obj[i]);
+	}
+	return ['JSON',obj];
+    }
+    return {empty : empty,
+	    singleton : singleton,
+	    insert : insert,
+	    lookup : lookup,
+	    findString : find("JsonString",["Nil"]),
+	    findObject : find("JsonObject", empty ),
+	    findArray  : find("JsonArray" ,["Nil"]),
+	    findWithDefault : lookupWithDefault,
+	    remove : remove,
+	    toPrettyJSString : toPrettyJSString,
+	    toJSString : toPrettyJSString(''),
+	    fromJSString : fromJSString,
+	    toPrettyString : function(sep) { return function(v) {
+		return JS.castJSStringToString(toPrettyJSString(sep)(v)); }; },
+	    toString : function(v) { return JS.castJSStringToString(toPrettyJSString('')(v)); },
+	    fromString : function(v) { return fromJSString(JS.castStringToJSString(v)); },
+	    toList : toList,
+	    fromList : fromList,
+	    JsonString : JsonString,
+	    JsonNumber : JsonNumber,
+	    JsonBool : JsonBool,
+	    JsonNull : JsonNull,
+	    JsonArray : JsonArray,
+	    JsonObject : JsonObject
+    };
+}();
+
+var Value = function(){
+
+  var eq = function(x,y) {
+    if (typeof x === "object") {
+	if (x.hasOwnProperty('_')) {
+	    for (var i in x) { if (x[i] != y[i]) return false; }
+	    for (var i in y) { if (x[i] != y[i]) return false; }
+	    return true;
+	}
+	if (x === y) return true;
+	if (x.length !== y.length) return false;
+	for (var i = x.length; i--; ) {
+	    if (!eq(x[i],y[i])) return false;
+	}
+	return true;
+    }
+    return x === y;
+  };
+
+  var Tuple = function() {
+      var len = arguments.length;
+      var arr = new Array(len+1);
+      arr[0] = "Tuple" + arguments.length;
+      for (var i = len; i--; ) {
+	  arr[i+1] = arguments[i];
+      }
+      return arr;
+  };
+
+  var listToArray = function(list) {
+      var arr = [];
+      while (list[0] === "Cons") {
+        arr.push(list[1]);
+	list = list[2];
+      }
+      return arr;
+  };
+
+  function makeSpaces(s) {
+    if (s.length == 0) { return s; }
+    var arr = s.split('');
+    if (arr[0] == ' ') { arr[0] = "&nbsp;" }      
+    for (var i = arr.length; --i; ) {
+      if (arr[i][0] == ' ' && arr[i-1] == ' ') {
+        arr[i-1] = arr[i-1] + arr[i];
+        arr[i] = '';
+      }
+    }
+    for (var i = arr.length; i--; ) {
+      if (arr[i].length > 1 && arr[i][0] == ' ') {
+        var spaces = arr[i].split('');
+        for (var j = spaces.length - 2; j >= 0; j -= 2) {
+          spaces[j] = '&nbsp;';
+        }
+        arr[i] = spaces.join('');
+      }
+    }
+    arr = arr.join('');
+    if (arr[arr.length-1] === " ") {
+	return arr.slice(0,-1) + '&nbsp;';
+    }
+    return arr;
+  }
+
+  function properEscape(str) {
+    if (str.length == 0) return str;
+    str = str //.replace(/&/g,  "&#38;")
+             .replace(/"/g, /*"*/  "&#34;")
+             .replace(/'/g, /*'*/  "&#39;")
+             .replace(/</g,  "&#60;")
+             .replace(/>/g,  "&#62;")
+             .replace(/\n/g, "<br/>");
+    var arr = str.split('<br/>');
+    for (var i = arr.length; i--; ) {
+	arr[i] = makeSpaces(arr[i]);
+    }
+    return arr.join('<br/>');
+  }
+
+  var toText = function(elmList) {
+    if (typeof elmList === "string") return properEscape(elmList);
+    var a = [];
+    while (elmList[0] === "Cons") {
+      a.push(elmList[1]);
+      elmList = elmList[2];
+    }
+    return properEscape(a.join(''));
+  };
+
+  function getTextSize(w,h,txt) {
+    var t = document.createElement('div');
+    t.innerHTML = txt;
+    t.style.textAlign = 'left';
+    if (w > 0) { t.style.width  = w + "px"; }
+    
+    t.style.visibility = "hidden";
+    t.style.styleFloat = "left";
+    t.style.cssFloat   = "left";
+    
+    document.body.appendChild(t);
+    var cStyle = window.getComputedStyle(t,null);
+    var realW = cStyle.getPropertyValue("width").slice(0,-2) - 0;
+    var realH = cStyle.getPropertyValue("height").slice(0,-2) - 0;
+    document.body.removeChild(t);
+    //delete t;
+    return [Math.ceil(realW),Math.ceil(Math.max(h,realH))];
+  }
+
+  function getSize(e) {
+    var t = e.cloneNode(true);
+    
+    t.style.visibility = "hidden";
+    t.style.styleFloat = "left";
+    t.style.cssFloat   = "left";
+    
+    document.body.appendChild(t);
+    var w = t.offsetWidth;
+    var h = t.offsetHeight;
+    document.body.removeChild(t);
+    //delete t;
+    return [w,h];
+  }
+
+  function getExcess(e) {
+    var t = e.cloneNode(true);
+    
+    t.style.visibility = "hidden";
+    t.style.styleFloat = "left";
+    t.style.cssFloat   = "left";
+    
+    document.body.appendChild(t);
+    var ow = t.offsetWidth;
+    var oh = t.offsetHeight;
+    var cStyle = window.getComputedStyle(t,null);
+    var w = cStyle.getPropertyValue("width").slice(0,-2) - 0;
+    var h = cStyle.getPropertyValue("height").slice(0,-2) - 0;
+    document.body.removeChild(t);
+    //delete t;
+    return [ow-w,oh-h];
+  }
+
+
+  function groupForms(forms) {
+    forms = Elm.JavaScript.castListToJSArray(forms);
+    var groups = [];
+    var arr = [];
+    for (var i = forms.length; i--; ) {
+	var f = forms[i];
+	switch(f[4][0]) {
+	case "FElement":
+	    if (arr.length > 0) {
+		groups.push(arr);
+		arr = [];
+	    }
+	    groups.push(f);
+	    break;
+	default:
+	    arr.push(f);
+	}
+    }
+    if (arr.length > 0) groups.push(arr);
+    return groups;
+  }
+
+  var toString = function(v) {
+    if (typeof v === "function") {
+	return "<function>";
+    } else if (typeof v === "boolean") {
+	return v ? "True" : "False";
+    } else if (typeof v === "number") {
+	return v+"";
+    } else if (typeof v === "string" && v.length < 2) {
+	return "'"+v+"'";
+    } else if (typeof v === "object" && v.hasOwnProperty('_')) {
+	var output = []
+	for (var k in v) {
+          if (k == '_') continue;
+          for (var i = v[k].length; i--; ) {
+            output.push(k + " = " + toString(v[k][i]));
+	  }
+	}
+	if (output.length === 0) return "{}";
+	return "{ " + output.join(", ") + " }";
+    } else if (v[0]) {
+	if (v[0].substring(0,5) === "Tuple") {
+	    var output = new Array(v.length-1);
+	    for (var i = v.length; --i; ) { output[i-1] = toString(v[i]); }
+	    return "(" + output.join(",") + ")";
+	} else if (v[0] === "Cons") {
+	    var start = (typeof v[1] === "string") ? '"' : "[";
+	    var  end  = (typeof v[1] === "string") ? '"' : "]";
+	    var  div  = (typeof v[1] === "string") ?  "" : ",";
+	    var   f   = (typeof v[1] === "string") ? function(x){return x} : toString;
+	    var output = start + f(v[1]);
+	    v = v[2];
+	    while (true) {
+		if (v[0] === "Cons") {
+		    output += div + f(v[1]);
+		    v = v[2];
+		} else {
+		    return output + end;
+		}
+	    }
+	} else if (v[0] === "Nil") {
+	    return "[]";
+	} else if (v[0] === "JSON") {
+	    return "(JSON.fromList " + toString(Elm.JSON.toList(v)) + ")";
+	} else if (v[0] === "RBNode" || v[0] === "RBEmpty") {
+	    function cons(k){ return function(v) { return function(acc) { return ["Cons",["Tuple2",k,v],acc]; }; }; }
+	    var list = Elm.Dict.foldr(cons)(["Nil"])(v);
+	    var name = "Dict";
+	    if (list[0] === "Cons" && list[1][2][0] === "Tuple0") {
+		name = "Set";
+		list = Elm.List.map(function(x) { return x[1]; })(list);
+	    }
+	    return "(" + name + ".fromList " + toString(list) + ")";
+	} else {
+	    var output = "";
+	    for (var i = v.length; --i; ) { output = ' ' + toString(v[i]) + output; }
+	    output = v[0] + output;
+	    return (v.length > 1) ? "(" + output + ")" : output;
+	}
+    }
+    return v+"";
+  };
+  var show = function(v) { return str(toString(v)); };
+  var append = function(xs,ys) {
+    if (typeof xs === "string" && typeof ys === "string") {
+	return xs.concat(ys);
+    }
+    if (xs[0] === "Nil") {
+	return ys;
+    }
+    var root = ["Cons", xs[1], ["Nil"]];
+    var curr = root;
+    xs = xs[2];
+    while (xs[0]==="Cons") {
+	curr[2] = ["Cons", xs[1], ["Nil"]];
+	xs = xs[2];
+	curr = curr[2];
+    }
+    curr[2] = ys;
+    return root;
+  };
+
+  var str = function(s) {
+    var out = ["Nil"];
+    for (var i = s.length; i--; ) {
+      out = ["Cons", s[i], out];
+    }
+    return out;
+  };
+  
+  function wrap(elem) {
+      var p = Value.getSize(elem);
+      return ["Element", Guid.guid(), ["EHtml",elem],
+	      p[0], p[1], 1, ["Nothing"], ["Nothing"]];
+  }
+  var addListener = function() {
+      if(document.addEventListener) {
+	  return function(element, event, handler) {
+	      element.addEventListener(event, handler, false);
+	  };
+      } else {
+	  return function(element, event, handler) {
+	      element.attachEvent('on' + event, handler);
+	  };
+      }
+  }();
+
+  return {eq:eq,
+	  str:str,
+	  show:show,
+	  Tuple:Tuple,
+	  append:append,
+	  listToArray:listToArray,
+	  toText : toText,
+	  properEscape : properEscape,
+	  getTextSize : getTextSize,
+	  getSize : getSize,
+	  getExcess : getExcess,
+	  groupForms : groupForms,
+	  wrap : wrap,
+	  addListener : addListener
+       };
+}();Elm.List = function() {
+
+    var throwError = function(f) {
+	throw "Function '" + f + "' expecting a list!";
+    }
+
+    function length(xs) {
+	var out = 0;
+	while (xs[0] === "Cons") {
+	    out += 1;
+	    xs = xs[2];
+	}
+	return out;
+    };
+    var reverse = foldl(function(x_72) {
+      return function(y_73) {
+        return["Cons", x_72, y_73]
+      }
+    })(["Nil"]);
+    var concat = foldr(function(x_74) {
+      return function(y_75) {
+        return Value.append(x_74, y_75)
+      }
+    })(["Nil"]);
+    var and = foldl(function(x_77) {
+      return function(y_78) {
+        return x_77 && y_78
+      }
+    })(true);
+    var or = foldl(function(x_79) {
+      return function(y_80) {
+        return x_79 || y_80
+      }
+    })(false);
+    var sum = foldl(function(x_89) {
+      return function(y_90) {
+        return x_89 + y_90
+      }
+    })(0);
+    var product = foldl(function(x_91) {
+      return function(y_92) {
+        return x_91 * y_92
+      }
+    })(1);
+    var maximum = foldl1(function(x) { return function(y) { return Math.max(x,y) } });
+    var minimum = foldl1(function(x) { return function(y) { return Math.min(x,y) } });
+    function head(v) {
+	if (v[0] !== "Cons") {
+	    throw "Error: 'head' only accepts lists of length greater than one.";
+	}
+	return v[1];
+    }
+    function tail(v) {
+	if (v[0] !== "Cons") {
+	    throw "Error: 'tail' only accepts lists of length greater than one.";
+	}
+	return v[2];
+    }
+    function last(v) {
+	if (v[0] !== "Cons") {
+	    throw "Error: 'last' only accepts lists of length greater than one.";
+	}
+	var out = v[1];
+	while (v[0] === "Cons") {
+	    out = v[1];
+	    v = v[2];
+	}
+	return out;
+    }
+    function map(f) {
+      return function(xs) {
+	  if (xs[0] === "Nil") { return xs; }
+	  if (xs[0] !== "Cons") { throwError('map'); }
+	  var root = ["Cons", f(xs[1]), ["Nil"]];
+	  var curr = root;
+	  xs = xs[2];
+	  while (xs[0]==="Cons") {
+	      curr[2] = ["Cons", f(xs[1]), ["Nil"]];
+	      xs = xs[2];
+	      curr = curr[2];
+	  }
+	  return root;
+      }
+    }
+    function foldl(f) {
+      return function(b) {
+        return function(xs) {
+          var acc = b;
+	  if (xs[0] === "Nil") { return acc; }
+	  if (xs[0] !== "Cons") { throwError('foldl'); }
+	  while (xs[0] === "Cons") {
+	      acc = f(xs[1])(acc);
+	      xs = xs[2];
+	  }
+	  return acc;
+        }
+      }
+    }
+    function foldr(f) {
+      return function(b) {
+        return function(xs) {
+          var acc = b;
+	  if (xs[0] === "Nil") { return acc; }
+	  if (xs[0] !== "Cons") { throwError('foldr'); }
+	  var arr = [];
+	  while (xs[0] === "Cons") {
+	      arr.push(xs[1]);
+	      xs = xs[2];
+	  }
+	  for (var i = arr.length; i--; ) {
+	      acc = f(arr[i])(acc);
+	  }
+	  return acc;
+        }
+      }
+    }
+    function foldl1(f_49) {
+      return function(_temp_50) {
+        return function(v) {
+          if("Cons" !== v[0]) {
+            return undefined
+          }else {
+            var x_51 = v[1];
+            var xs_52 = v[2];
+            return foldl(f_49)(x_51)(xs_52)
+          }
+        }(_temp_50)
+      }
+    }
+    function foldr1(f) {
+      return function(xs) {
+	if (xs[0] === "Nil") { throw "'foldr1' requires an non-empty list." }
+	if (xs[0] !== "Cons") { throwError('foldr1'); }
+	var arr = [];
+	while (xs[0] === "Cons") {
+	    arr.push(xs[1]);
+	    xs = xs[2];
+	}
+        var acc = arr.pop();
+	for (var i = arr.length; i--; ) {
+	    acc = f(arr[i])(acc);
+	}
+	return acc;
+      }
+    }
+    function scanl(f) {
+      return function(b) {
+        return function(xs) {
+          if (xs[0] === "Nil") { return ["Cons",b,["Nil"]]; }
+	  if (xs[0] !== "Cons") { throwError('scanl'); }
+	  var arr = [b];
+	  while (xs[0] === "Cons") {
+	      b = f(xs[1])(b);
+	      arr.push(b);
+	      xs = xs[2];
+	  }
+	  var out = ["Nil"];
+	  for (var i = arr.length; i--; ) {
+	      out = ["Cons", arr[i], out];
+	  }
+	  return out;
+        }
+      }
+    }
+    function scanl1(f) {
+      return function(xs) {
+	if (xs[0] !== "Cons") {
+	    throw "Error: 'scanl1' requires a list of at least length 1.";
+	}
+	return scanl(f)(xs[1])(xs[2]);
+      }
+    }
+    function filter(pred) {
+      return function(xs) {
+        if (xs[0] === "Nil") { return xs; }
+	if (xs[0] !== "Cons") { throwError('filter'); }
+	var arr = [];
+	while (xs[0] === "Cons") {
+          if (pred(xs[1])) { arr.push(xs[1]); }
+	  xs = xs[2];
+	}
+	var out = ["Nil"];
+	for (var i = arr.length; i--; ) {
+	    out = ["Cons", arr[i], out];
+	}
+	return out;
+      }
+    }
+    function concatMap(f_76) {
+      return function(x) {
+        return concat(map(f_76)(x))
+      }
+    }
+    function all(pred) {
+	return foldl(function(x) { return function(acc) {
+		    return acc && pred(x);
+		};})(true);
+    }
+    function any(pred) {
+	return foldl(function(x) { return function(acc) {
+		    return acc || pred(x);
+		};})(false);
+    }
+    function partition(pred_93) {
+      return function(lst_94) {
+        return function() {
+          var v = lst_94;
+          var c = [function(v) {
+            if("Nil" !== v[0]) {
+              return undefined
+            }else {
+              return["Tuple2", ["Nil"], ["Nil"]]
+            }
+          }, function(v) {
+            if("Cons" !== v[0]) {
+              return undefined
+            }else {
+              var x_95 = v[1];
+              var xs_96 = v[2];
+              return function(v) {
+                if("Tuple2" !== v[0]) {
+                  return undefined
+                }else {
+                  var as_97 = v[1];
+                  var bs_98 = v[2];
+                  return pred_93(x_95) ? ["Tuple2", ["Cons", x_95, as_97], bs_98] : ["Tuple2", as_97, ["Cons", x_95, bs_98]]
+                }
+              }(partition(pred_93)(xs_96))
+            }
+          }];
+          for(var i = c.length;i--;) {
+            var r = c[i](v);
+            if(r !== undefined) {
+              return r
+            }
+          }
+        }()
+      }
+    }
+    function zipWith(f) {
+      return function(listA) {
+	  return function(listB) {
+	  if (listA[0] === "Nil" || listB[0] === "Nil") { return ["Nil"]; }
+	  if (listA[0] !== "Cons" || listB[0] !== "Cons") { throwError('zipWith'); }
+	  var arr = [];
+	  while (listA[0] === "Cons" && listB[0] === "Cons") {
+	      arr.push(f(listA[1])(listB[1]));
+	      listA = listA[2];
+	      listB = listB[2];
+	  }
+	  var out = ["Nil"];
+	  for (var i = arr.length; i--; ) {
+	      out = ["Cons", arr[i], out];
+	  }
+	  return out;
+        }
+      }
+    }
+    function zip(listA) {
+      return function(listB) {
+	  if (listA[0] === "Nil" || listB[0] === "Nil") { return ["Nil"]; }
+	  if (listA[0] !== "Cons" || listB[0] !== "Cons") { throwError('zip'); }
+	  var arr = [];
+	  while (listA[0] === "Cons" && listB[0] === "Cons") {
+	      arr.push(["Tuple2", listA[1], listB[1]]);
+	      listA = listA[2];
+	      listB = listB[2];
+	  }
+	  var out = ["Nil"];
+	  for (var i = arr.length; i--; ) {
+	      out = ["Cons", arr[i], out];
+	  }
+	  return out;
+      }
+    }
+    function unzip(pairs_112) {
+      return function() {
+        var v = pairs_112;
+        var c = [function(v) {
+          if("Nil" !== v[0]) {
+            return undefined
+          }else {
+            return["Tuple2", ["Nil"], ["Nil"]]
+          }
+        }, function(v) {
+          if("Cons" !== v[0]) {
+            return undefined
+          }else {
+            var p_113 = v[1];
+            var ps_114 = v[2];
+            return function(v) {
+              if("Tuple2" !== v[0]) {
+                return undefined
+              }else {
+                if("Tuple2" !== v[1][0]) {
+                  return undefined
+                }else {
+                  var x_115 = v[1][1];
+                  var y_116 = v[1][2];
+                  if("Tuple2" !== v[2][0]) {
+                    return undefined
+                  }else {
+                    var xs_117 = v[2][1];
+                    var ys_118 = v[2][2];
+                    return["Tuple2", ["Cons", x_115, xs_117], ["Cons", y_116, ys_118]]
+                  }
+                }
+              }
+            }(["Tuple2", p_113, unzip(ps_114)])
+          }
+        }];
+        for(var i = c.length;i--;) {
+          var r = c[i](v);
+          if(r !== undefined) {
+            return r
+          }
+        }
+      }()
+    }
+    function intersperse(sep_119) {
+      return function(xs_120) {
+        return function() {
+          var v = xs_120;
+          var c = [function(v) {
+            if("Nil" !== v[0]) {
+              return undefined
+            }else {
+              return["Nil"]
+            }
+          }, function(v) {
+            if("Cons" !== v[0]) {
+              return undefined
+            }else {
+              var a_124 = v[1];
+              if("Nil" !== v[2][0]) {
+                return undefined
+              }else {
+                return["Cons", a_124, ["Nil"]]
+              }
+            }
+          }, function(v) {
+            if("Cons" !== v[0]) {
+              return undefined
+            }else {
+              var a_121 = v[1];
+              if("Cons" !== v[2][0]) {
+                return undefined
+              }else {
+                var b_122 = v[2][1];
+                var cs_123 = v[2][2];
+                return["Cons", a_121, ["Cons", sep_119, intersperse(sep_119)(["Cons", b_122, cs_123])]]
+              }
+            }
+          }];
+          for(var i = c.length;i--;) {
+            var r = c[i](v);
+            if(r !== undefined) {
+              return r
+            }
+          }
+        }()
+      }
+    }
+    function intercalate(sep_125) {
+      return function(xs_126) {
+        return function() {
+          var v = xs_126;
+          var c = [function(v) {
+            if("Nil" !== v[0]) {
+              return undefined
+            }else {
+              return["Nil"]
+            }
+          }, function(v) {
+            if("Cons" !== v[0]) {
+              return undefined
+            }else {
+              var a_130 = v[1];
+              if("Nil" !== v[2][0]) {
+                return undefined
+              }else {
+                return a_130
+              }
+            }
+          }, function(v) {
+            if("Cons" !== v[0]) {
+              return undefined
+            }else {
+              var a_127 = v[1];
+              if("Cons" !== v[2][0]) {
+                return undefined
+              }else {
+                var b_128 = v[2][1];
+                var cs_129 = v[2][2];
+                return Value.append(a_127, Value.append(sep_125, intercalate(sep_125)(["Cons", b_128, cs_129])))
+              }
+            }
+          }];
+          for(var i = c.length;i--;) {
+            var r = c[i](v);
+            if(r !== undefined) {
+              return r
+            }
+          }
+        }()
+      }
+    }
+    function sort(xs) {
+      if (xs[0] === "Nil") { return xs; }
+      if (xs[0] !== "Cons") { throwError('sort'); }
+      var arr = [];
+      while (xs[0] === "Cons") {
+	  arr.push(xs[1]);
+	  xs = xs[2];
+      }
+      arr.sort(function(a,b) { return a - b});
+      var out = ["Nil"];
+      for (var i = arr.length; i--; ) {
+	  out = [ "Cons", arr[i], out ];
+      }
+      return out;
+    }
+    function take(n) { return function(xs) {
+        if (n <= 0) { return ["Nil"]; }
+	if (xs[0] === "Nil") { return xs; }
+	if (xs[0] !== "Cons") { throwError('take'); }
+	var out = [ "Cons", xs[1], ["Nil"] ];
+	var temp = out;
+	xs = xs[2];
+	--n;
+	while (xs[0] === "Cons" && n > 0) {
+	    temp[2] = [ "Cons", xs[1], ["Nil"] ];
+	    temp = temp[2];
+	    xs = xs[2];
+	    --n;
+	}
+	return out;
+      };
+    }
+    function drop(n) { return function(xs) {
+	if (xs[0] === "Nil") { return xs; }
+	if (xs[0] !== "Cons") { throwError('drop'); }
+	while (xs[0] === "Cons" && n > 0) {
+	    xs = xs[2];
+	    --n;
+	}
+	return xs;
+      };
+    }
+    return {head:head,
+	    tail:tail,
+	    last:last,
+	    map:map,
+	    foldl:foldl,
+	    foldr:foldr,
+	    foldl1:foldl1,
+	    foldr1:foldr1,
+	    scanl:scanl,
+	    scanl1:scanl1,
+	    filter:filter,
+	    length:length,
+	    reverse:reverse,
+	    concat:concat,
+	    concatMap:concatMap,
+	    and:and,
+	    or:or,
+	    all:all,
+	    any:any,
+	    sum:sum,
+	    product:product,
+	    maximum:maximum,
+	    minimum:minimum,
+	    partition:partition,
+	    zipWith:zipWith,
+	    zip:zip,
+	    unzip:unzip,
+	    intersperse:intersperse,
+	    intercalate:intercalate,
+	    sort:sort,
+	    take:take,
+	    drop:drop};
+}();
+Elm.Maybe = function() {
+    function consMaybe(x) { return function(xs) {
+	    if (x[0] === "Just") return ["Cons", x[1], xs];
+	    return xs;
+	};
+    }
+    function mapCons(f) { return function(y) { return function(xs) {
+		var x = f(y);
+		if (x[0] === "Just") return ["Cons", x[1], xs];
+		return xs;
+	    };
+	};
+    }
+    function maybe(b) { return function(f) { return function(m) {
+		if (m[0] === "Just") return f(m[1]);
+		return b;
+	    };
+	};
+    }
+
+    return {Just : function(x) { return ["Just",x]; },
+	    Nothing : ["Nothing"],
+	    justs : Elm.List.foldr(consMaybe)(["Nil"]),
+	    isJust : function(m) { return m[0] === "Just"; },
+	    isNothing : function(m) { return m[0] === "Nothing"; },
+	    cons : consMaybe,
+	    maybe : maybe
+    };
+}();
+
+Elm.Either = function() {
+ function Left(a1) { return ['Left',a1]; }
+ function Right(a1){ return ['Right',a1]; }
+ function either(f){ return function(g){ return function(e){
+    switch(e[0]){
+     case 'Left':  return f(e[1]);
+     case 'Right': return g(e[1]);
+    }
+ };};}
+ function isLeft(e)  { return e[0] == 'Left';  }
+ function isRight(e) { return e[0] == 'Right'; }
+
+ function get(es) { return Elm.List.map(function(x){return x[1];})(es); }
+ function lefts(es) { return get(Elm.List.filter(isLeft)(es)); }
+ function rights(es) { return get(Elm.List.filter(isRight)(es)); }
+ function partition(es) {
+     var lrs = Elm.List.partition(isLeft)(es);
+     lrs[1] = get(lrs[1]);
+     lrs[2] = get(lrs[2]);
+     return lrs;
+ }
+ return {Left:Left,
+	 Right:Right,
+	 either:either,
+	 isLeft:isLeft,
+	 isRight:isRight,
+	 lefts:lefts,
+	 rights:rights,
+	 partition:partition};
+}();
+
+Elm.Char = function() {
+    function isBetween(lo,hi) { return function(chr) {
+	    var c = chr.charCodeAt(0);
+	    return lo <= c && c <= hi;
+	};
+    }
+    var isDigit = isBetween('0'.charCodeAt(0),'9'.charCodeAt(0));
+    var chk1 = isBetween('a'.charCodeAt(0),'f'.charCodeAt(0));
+    var chk2 = isBetween('A'.charCodeAt(0),'F'.charCodeAt(0));
+    
+    return {fromCode : function(c) { return String.fromCharCode(c); },
+	    toCode : function(c) { return c.charCodeAt(0); },
+	    toUpper : function(c) { return c.toUpperCase(); },
+	    toLower : function(c) { return c.toLowerCase(); },
+	    toLocaleUpper : function(c) { return c.toLocaleUpperCase(); },
+	    toLocaleLower : function(c) { return c.toLocaleLowerCase(); },
+	    isLower    : isBetween('a'.charCodeAt(0),'z'.charCodeAt(0)),
+	    isUpper    : isBetween('A'.charCodeAt(0),'Z'.charCodeAt(0)),
+	    isDigit    : isDigit,
+	    isOctDigit : isBetween('0'.charCodeAt(0),'7'.charCodeAt(0)),
+	    isHexDigit : function(c) { return isDigit(c) || chk1(c) || chk2(c); }
+    };
+}();
+Elm.Color = function() {
+
+function Color_0(a1) {
+  return function(a2) {
+    return function(a3) {
+      return function(a4) {
+        return["Color", a1, a2, a3, a4]
+      }
+    }
+  }
+}
+var rgba_1 = Color_0;
+var red_3 = ["Color",255,0,0,1];
+var green_4 = ["Color",0,255,0,1];
+var blue_5 = ["Color",0,0,255,1];
+var yellow_6 = ["Color",255,255,0,1];
+var cyan_7 = ["Color",0,255,255,1];
+var magenta_8 = ["Color",255,0,255,1];
+var black_9 = ["Color",0,0,0,1];
+var white_10 = ["Color",255,255,255,1];
+var gray_11 = ["Color",128,128,128,1];
+var grey_12 = ["Color",128,128,128,1];
+function rgb_2(r_13) {
+  return function(g_14) {
+    return function(b_15) {
+      return ["Color",r_13,g_14,b_15,1]
+    }
+  }
+}
+function extract(c) {
+    if (c[4] === 1) { return 'rgb(' + c[1] + ',' + c[2] + ',' + c[3] + ')'; }
+    return 'rgba(' + c[1] + ',' + c[2] + ',' + c[3] + ',' + c[4] + ')';
+}
+function complement(rgb) {
+  var hsv = toHSV(rgb);
+  hsv.hue = (hsv.hue + 180) % 360;
+  return toRGB(hsv);
+}
+
+function hsva(h) { return function(s) { return function(v) { return function(a) {
+    var clr = toRGB({hue:h, saturation:s, value:v});
+    clr[4] = a;
+    return clr;
+  }; }; };
+}
+
+function hsv(h) { return function(s) { return function(v) {
+   return toRGB({hue:h, saturation:s, value:v}); }; }; }
+
+function toHSV(rgb) {
+    var hsv = {};
+    var r = rgb[1] / 255.0, g = rgb[2] / 255.0, b = rgb[3] / 255.0;
+    var M = Math.max(r,g,b);
+    var m = Math.min(r,g,b);
+    var c = M - m;
+
+    var h = 0;
+    if (c === 0) { h = 0; }
+    else if (M === r) { h = ((g - b) / c) % 6; }
+    else if (M === g) { h = ((b - r) / c) + 2; }
+    else if (M === b) { h = ((r - g) / c) + 4; }
+    h *= 60;
+
+    return { value : M, hue : h, saturation : (M === 0 ? 0 : c / M) };
+}
+
+function between(lo,hi,x) { return lo <= x && x < hi; }
+function norm(n) { return Math.round(n*255); }
+
+function toRGB(hsv) {
+    var c = hsv.value * hsv.saturation;
+    var hue = hsv.hue / 60;
+    var x = c * (1 - Math.abs((hue % 2) - 1));
+    var r = 0, g = 0, b = 0;
+         if (between(0,1,hue)) { r = c; g = x; b = 0; }
+    else if (between(1,2,hue)) { r = x; g = c; b = 0; }
+    else if (between(2,3,hue)) { r = 0; g = c; b = x; }
+    else if (between(3,4,hue)) { r = 0; g = x; b = c; }
+    else if (between(4,5,hue)) { r = x; g = 0; b = c; }
+    else if (between(5,6,hue)) { r = c; g = 0; b = x; }
+
+    var m = hsv.value - c;
+    return ["Color", norm(r+m), norm(g+m), norm(b+m), 1 ];
+}
+  return{rgba:rgba_1, rgb:rgb_2, hsva:hsva, hsv:hsv, red:red_3, green:green_4, blue:blue_5, yellow:yellow_6, cyan:cyan_7, magenta:magenta_8, black:black_9, white:white_10, gray:gray_11, grey:grey_12,complement:complement,extract:extract}
+}();
+var Collage = function() {
+
+var JS = Elm.JavaScript;
+
+function tracePoints(ctx,points) {
+    var i = points.length - 1;
+    if (i <= 0) return;
+    ctx.moveTo(points[i][1], points[i][2]);
+    while (i--) { ctx.lineTo(points[i][1], points[i][2]); }
+}
+
+function solid(ctx,color,points) {
+    tracePoints(ctx,points);
+    ctx.strokeStyle = Elm.Color.extract(color);
+    ctx.stroke();
+};
+
+function filled(ctx,color,points) {
+    tracePoints(ctx,points);
+    ctx.fillStyle = Elm.Color.extract(color);
+    ctx.fill();
+}
+
+function textured(redo,ctx,src,points) {
+    var img = new Image();
+    img.src = JS.castStringToJSString(src);
+    img.onload = redo;
+
+    tracePoints(ctx,points);
+    ctx.fillStyle = ctx.createPattern(img,'repeat');
+    ctx.fill();
+}
+
+function customLine(pattern,ctx,color,points) {
+    if (pattern.length === 0) { pattern = [8,4]; }
+    customLineHelp(ctx, pattern, points);
+    ctx.strokeStyle = Elm.Color.extract(color);
+    ctx.stroke();
+};
+
+var customLineHelp = function(ctx, pattern, points) {
+    var i = points.length - 1;
+    if (i <= 0) return;
+    var x0 = points[i][1], y0 = points[i][2];
+    var x1=0, y1=0, dx=0, dy=0, remaining=0, nx=0, ny=0;
+    var pindex = 0, plen = pattern.length;
+    var draw = true, segmentLength = pattern[0];
+    ctx.moveTo(x0,y0);
+    while (i--) {
+	x1 = points[i][1]; y1 = points[i][2];
+	dx = x1 - x0; dy = y1 - y0;
+	remaining = Math.sqrt(dx * dx + dy * dy);
+	while (segmentLength <= remaining) {
+	    x0 += dx * segmentLength / remaining;
+	    y0 += dy * segmentLength / remaining;
+	    ctx[draw ? 'lineTo' : 'moveTo'](x0, y0);
+	    // update starting position
+	    dx = x1 - x0; dy = y1 - y0;
+	    remaining = Math.sqrt(dx * dx + dy * dy);
+	    // update pattern
+	    draw = !draw;
+	    pindex = (pindex + 1) % plen;
+	    segmentLength = pattern[pindex];
+	}
+	if (remaining > 0) {
+	    ctx[draw ? 'lineTo' : 'moveTo'](x1, y1);
+	    segmentLength -= remaining;
+	}
+	x0 = x1; y0 = y1;
+    }
+};
+
+function drawLine(ctx,form) {
+    var points = form[3][1];
+    switch(form[1][0]) {
+    case "Solid" : return solid(ctx,form[2],points);
+    case "Dotted": return customLine([3,3],ctx,form[2],points);
+    case "Dashed": return customLine([8,4],ctx,form[2],points);
+    case "Custom": return customLine(form[1][1],ctx,form[2],points);
+    }
+};
+
+function drawShape(redo,ctx,shapeStyle,color,points) {
+    switch(shapeStyle[0]) {
+    case "Filled":   return filled(ctx,color,points);
+    case "Outlined": return solid(ctx,color,points);
+    case "Textured": return textured(redo,ctx,shapeStyle[1],points);
+    case "CustomOutline":
+	return customLine(shapeStyle[1],ctx,color,points);
+    }
+};
+
+function drawImage(redo,ctx,w,h,src) {
+    var img = new Image();
+    img.onload = redo;
+    img.src = JS.castStringToJSString(src);
+    ctx.drawImage(img,-w/2,-h/2,w,h);
+}
+
+function renderForm(redo,ctx,theta,scale,x,y,form) {
+    ctx.save();
+    if (x !== 0 || y !== 0) ctx.translate(x,y);
+    if (theta !== ~~theta)  ctx.rotate(2*Math.PI*theta);
+    if (scale !== 1)        ctx.scale(scale,scale);
+    ctx.beginPath();
+    switch(form[0]) {
+    case "FLine":  drawLine(ctx,form); break;
+    case "FShape": drawShape(redo,ctx,form[1],form[2],form[3][1]); break;
+    case "FImage": drawImage(redo,ctx,form[1],form[2],form[3]); break;
+    }
+    ctx.restore();
+};
+
+function renderForms(redo,ctx,w,h,forms) {
+    ctx.clearRect(0,0,w,h);
+    for (var i = forms.length; i--; ) {
+	var f = forms[i];
+	renderForm(redo,ctx,f[1],f[2],f[3][1],f[3][2],f[4]);
+    }
+}
+
+function collageForms(w,h,forms) {
+    var canvas = Render.newElement('canvas');
+    w = ~~w;
+    h = ~~h;
+    var dpr = 1;
+    if(window.devicePixelRatio) {
+      dpr = window.devicePixelRatio;
+    }
+
+    if(window.webkitImageSmoothingEnabled) {
+      window.webkitImageSmoothingEnabled = true;
+    }
+
+    canvas.style.width  = w + 'px';
+    canvas.style.height = h + 'px';
+    canvas.style.display = "block";
+    canvas.width  = dpr * w;
+    canvas.height = dpr * h;
+    if (canvas.getContext) {
+      var ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      function redo() { renderForms(this,ctx,w,h,forms); }
+      renderForms(redo,ctx,w,h,forms);
+      return canvas;
+    }
+    canvas.innerHTML = "Your browser does not support the canvas element.";
+    return canvas;
+};
+
+function applyTransforms(theta,scale,x,y,w,h,e) {
+  var t = "translate(" + (x - w / 2) + "px,"+ (y - h / 2) + "px)";
+  var r = theta === (~~theta) ? "" : "rotate(" + theta*360 + "deg)";
+  var s = scale === 1 ? "" : "scale(" + scale + "," + scale + ")";
+  var transforms = t + " " + s + " " + r;
+  e.style.transform       = transforms;
+  e.style.msTransform     = transforms;
+  e.style.MozTransform    = transforms;
+  e.style.webkitTransform = transforms;
+  e.style.OTransform      = transforms;
+}
+
+function collageElement(w,h,theta,scale,x,y,elem) {
+    var e = Render.render(elem);
+    applyTransforms(theta,scale,x,y,elem[3],elem[4],e);
+    var div = Render.newElement('div');
+    Render.addTo(div,e);
+    div.style.width = (~~w) + "px";
+    div.style.height = (~~h) + "px";
+    div.style.overflow = "hidden";
+    return div;
+}
+
+function collage(w,h,formss) {
+    if (formss.length === 0) { return collageForms(w,h,[]); }
+    var elems = new Array(formss.length);
+    for (var i = formss.length; i--; ) {
+	var f = formss[i];
+	if (typeof f[0] === "string") {
+	    elems[i] = collageElement(w,h,f[1],f[2],f[3][1],f[3][2],f[4][1]);
+	} else {
+	    elems[i] = collageForms(w,h,f);
+	}
+    }
+    if (formss.length === 1) { return elems[0]; }
+    return Render.flowWith(Render.goIn,function(x){return x},elems);
+}
+
+function updateFormSet(node,currSet,nextSet) {
+  if (Value.eq(nextSet,currSet)) return;
+  var w = node.style.width.slice(0,-2) - 0;
+  var h = node.style.height.slice(0,-2) - 0;
+  if (typeof nextSet[0] === "object") {
+    if (typeof currSet[0] === "object") {
+      if (node.getContext) {
+        var ctx = node.getContext('2d');
+	function redo() { renderForms(this,ctx,w,h,nextSet); }
+	  return renderForms(redo,ctx,w,h,nextSet);
+      }
+    }
+    var newNode = collageForms(w,h,nextSet);
+    newNode.style.position = 'absolute';
+    return node.parentNode.replaceChild(newNode,node);
+  }
+  node.style.width = (~~w) + "px";
+  node.style.height = (~~h) + "px";
+  var f = nextSet;
+  var next = nextSet[4][1];
+  Render.update(node.firstChild, currSet[4][1], next);
+  applyTransforms(f[1],f[2],f[3][1],f[3][2],next[3],next[4],node.firstChild);
+}
+
+// assumes that the form sets are the same length.
+function updateCollage(node,currs,nexts) {
+    if (nexts.length === 1) {
+	return updateFormSet(node,currs[0],nexts[0]);
+    }
+    var kids = node.childNodes;
+    var len = kids.length;
+    for (var i = len; i--; ) {
+	updateFormSet(kids[len-i-1], currs[i], nexts[i]);
+    }
+}
+
+function style(clr,n,list) {
+    return ["Tuple2",
+	    '<span style="font-size:100%;color:' + clr + ';">' + n + '</span>',
+	    list];
+}
+
+function insideForm(point) { return function(form) {
+    if (!inBoundsOf(point[1],point[2],form)) return false;
+    var hw, hh;
+    switch (form[4][0]) {
+    case "FShape": return insideShape(point,form[1],form[2],form[3],form[4][3][1]);
+    case "FLine":  return false;
+    case "FImage":
+	hw = form[4][1] / 2;
+	hh = form[4][2] / 2;
+	break;
+    case "FElement":
+	hw = form[4][1][3] / 2;
+	hh = form[4][1][4] / 2;
+	break;
+    }
+    return insideShape(point,form[1],form[2],form[3],
+		       [ [null, hw, hh],
+			 [null,-hw, hh],
+			 [null,-hw,-hh],
+			 [null, hw,-hh],
+			 [null, hw, hh] ]);
+    };
+}
+
+function inBoundsOf(px,py,form) {
+  if (form.length < 6) {
+    var fx = form[3][1], fy = form[3][2];
+    var radiusSquared = 0;
+    var scale = form[2];
+    switch (form[4][0]) {
+    case "FShape":
+      var points = form[4][3][1];
+      for (var i = points.length; --i; ) {
+	  var p = points[i];
+	  radiusSquared = Math.max(radiusSquared, p[1]*p[1] + p[2]*p[2]);
+      }
+      radiusSquared *= scale * scale;
+      break;
+    case "FLine":
+      break;
+    case "FImage":
+      var x = scale * form[4][1] / 2;
+      var y = scale * form[4][2] / 2;
+      radiusSquared = x*x + y*y;
+      break;
+    case "FElement":
+      var x = scale * form[4][1][3] / 2;
+      var y = scale * form[4][1][4] / 2;
+      radiusSquared = x*x + y*y;
+      break;
+    }
+    form.push(function(px,py) {
+	    var dx = px - fx;
+	    var dy = py - fy;
+	    return dx*dx + dy*dy < radiusSquared + 1;
+	});
+  }
+  return form[5](px,py);
+}
+
+function insideShape(point,theta,scale,pos,points) {
+  var counter = 0;
+  var list = ["Nil"];
+  var p1,p2;
+
+  var x = (point[1] - pos[1]) / scale;
+  var y = (point[2] - pos[2]) / scale;
+  if (theta !== 0) {
+      var t = -2 * Math.PI * theta;
+      var nx = x * Math.cos(t) - y * Math.sin(t);
+      y = x * Math.sin(t) + y * Math.cos(t);
+      x = nx;
+  }
+
+  if (points.length === 0) { return false; }
+  p1 = points[0];
+  for (var i = points.length - 1; i--; ) {
+    p2 = points[i];
+    var p1x = p1[1], p1y = p1[2], p2x = p2[1], p2y = p2[2];
+
+    if (p1y < p2y) {var ymin=p1y, ymax=p2y;} else {var ymin=p2y, ymax=p1y;}
+    if (p1x < p2x) {var xmin=p1x, xmax=p2x;} else {var xmin=p2x, xmax=p1x;}
+
+    if (ymin < y && y <= ymax && x <= xmax) {
+	if (x <= xmin || x <= ((y-p1y)*(p2x-p1x)/(p2y-p1y)+p1x)) {
+	    ++counter;
+	}
+    }
+    p1 = p2;
+  }
+  return (counter % 2) === 1;
+}
+
+return {collage:collage, updateCollage:updateCollage, insideForm:insideForm};
+
+}();
+Elm.Graphics = function() {
+  for (this['i'] in Elm.List) {
+      eval('var ' + this['i'] + ' = Elm.List[this.i];');
+  }
+  var JS = Elm.JavaScript;
+  var DLeft_0 = ["DLeft"];
+  var DRight_1 = ["DRight"];
+  var DUp_2 = ["DUp"];
+  var DDown_3 = ["DDown"];
+  var DIn_4 = ["DIn"];
+  var DOut_5 = ["DOut"];
+  function Absolute_12(a1) {
+    return["Absolute", a1]
+  }
+  function Relative_13(a1) {
+    return["Relative", a1]
+  }
+  var Near_14 = ["Near"];
+  var Mid_15 = ["Mid"];
+  var Far_16 = ["Far"];
+  function Position_17(a1) {
+    return function(a2) {
+      return["Position", a1, a2]
+    }
+  }
+  function PositionTL_18(a1) {
+    return function(a2) {
+      return["PositionTL", a1, a2]
+    }
+  }
+  function PositionTR_19(a1) {
+    return function(a2) {
+      return["PositionTR", a1, a2]
+    }
+  }
+  function PositionBL_20(a1) {
+    return function(a2) {
+      return["PositionBL", a1, a2]
+    }
+  }
+  function PositionBR_21(a1) {
+    return function(a2) {
+      return["PositionBR", a1, a2]
+    }
+  }
+  function Element_37(id,e,w,h,o,c,l) {
+    return["Element", id, e, w, h, o, c, l ]
+  }
+  function EText_39(a1) {
+    return function(a2) {
+	return["EText", a1, a2]
+    }
+  }
+  function EImage_40(a1) {
+    return["EImage", JS.castStringToJSString(a1)]
+  }
+  function EVideo_41(a1) {
+    return["EVideo", JS.castStringToJSString(a1)]
+  }
+  function EFittedImage_42(a1) {
+    return["EFittedImage", JS.castStringToJSString(a1)]
+  }
+  function EFlow_43(a1) {
+    return function(a2) {
+      return["EFlow", a1, JS.castListToJSArray(a2)]
+    }
+  }
+  function ECollage_44(a1) {
+    return function(a2) {
+      return function(a3) {
+	  return["ECollage", a1, a2, Value.groupForms(a3)]
+      }
+    }
+  }
+  var EEmpty_45 = ["EEmpty"];
+  function EContainer_46(a1) {
+    return function(a2) {
+      return["EContainer", a1, a2]
+    }
+  }
+  var Solid_68 = ["Solid"];
+  var Dotted_69 = ["Dotted"];
+  var Dashed_70 = ["Dashed"];
+  function Custom_71(a1) {
+    return["Custom", JS.castListToJSArray(a1)]
+  }
+  var Filled_72 = ["Filled"];
+  var Outlined_73 = ["Outlined"];
+  function CustomOutline_74(a1) {
+    return["CustomOutline", JS.castListToJSArray(a1)]
+  }
+  function Line_75(a1) {
+    return["Line", JS.castListToJSArray(a1)]
+  }
+  function Shape_78(a1) {
+    return function(a2) {
+	var points = JS.castListToJSArray(a1);
+	if (points.length > 0) { points.push(points[0]); }
+	return["Shape", points, a2];
+    }
+  }
+  function Form_84(a1) {
+    return function(a2) {
+      return function(a3) {
+        return function(a4) {
+          return["Form", a1, a2, a3, a4]
+        }
+      }
+    }
+  }
+  function FLine_85(a1) {
+    return function(a2) {
+      return function(a3) {
+        return["FLine", a1, a2, a3]
+      }
+    }
+  }
+  function FShape_86(a1) {
+    return function(a2) {
+      return function(a3) {
+        return["FShape", a1, a2, a3]
+      }
+    }
+  }
+  function FImage_87(a1) {
+    return function(a2) {
+      return function(a3) {
+          return["FImage", a1, a2, JS.castStringToJSString(a3)]
+      }
+    }
+  }
+  function FElement_88(a1) {
+      return["FElement", a1]
+  }
+  var left_6 = DLeft_0;
+  var right_7 = DRight_1;
+  var down_8 = DDown_3;
+  var up_9 = DUp_2;
+  var inward_10 = DIn_4;
+  var outward_11 = DOut_5;
+  var topLeft_22 = Position_17(Near_14)(Near_14);
+  var topRight_23 = Position_17(Far_16)(Near_14);
+  var bottomLeft_24 = Position_17(Near_14)(Far_16);
+  var bottomRight_25 = Position_17(Far_16)(Far_16);
+  var midLeft_26 = Position_17(Near_14)(Mid_15);
+  var midRight_27 = Position_17(Far_16)(Mid_15);
+  var midTop_28 = Position_17(Mid_15)(Near_14);
+  var midBottom_29 = Position_17(Mid_15)(Far_16);
+  var middle_30 = Position_17(Mid_15)(Mid_15);
+  function middleAt(a1) {
+    return function(a2) {
+      return["PositionAt", a1, a2]
+    }
+  }
+  var topLeftAt_31 = PositionTL_18;
+  var topRightAt_32 = PositionTR_19;
+  var bottomLeftAt_33 = PositionBL_20;
+  var bottomRightAt_34 = PositionBR_21;
+  var absolute_35 = Absolute_12;
+  var relative_36 = Relative_13;
+  function newElement_38(e,w,h,o,c,l) { return Element_37(Guid.guid(),e,w,h,o,c,l); }
+  function basicNewElement(e,w,h) { return Element_37(Guid.guid(),e,w,h,1,["Nothing"],["Nothing"]); }
+  var line_76 = Line_75;
+  var polygon_79 = Shape_78;
+  function sprite_96(src) {
+    return function(w) {
+      return function(h) {
+        return function(pos) {
+          return Form_84(0)(1)(pos)(FImage_87(w)(h)(src))
+	}
+      }
+    }
+  }
+  function toForm_97(pos) {
+    return function(e) {
+      return Form_84(0)(1)(pos)(FElement_88(e))
+    }
+  }
+  function width_47(w__101) {
+    return function(e) {
+      var be = e[2];
+      switch(be[0]) {
+      case "EImage":
+      case "EVideo":
+	  return newElement_38(e[2],w__101,e[4] * w__101 / e[3], e[5], e[6], e[7]);
+      case "EText":
+	  var p = Value.getTextSize(w__101,e[4],be[2]);
+	  return newElement_38(e[2], w__101, p[1], e[5], e[6], e[7]);
+      }
+      return newElement_38(e[2], w__101, e[4], e[5], e[6], e[7]);
+    }
+  }
+  function height_48(h__108) {
+    return function(e) {
+      var be = e[2];
+      switch(be[0]) {
+      case "EImage":
+      case "EVideo":
+	  return newElement_38(e[2], e[3] * h__108 / e[4], h__108, e[5], e[6], e[7]);
+      }
+      return newElement_38(e[2], e[3], h__108, e[5], e[6], e[7]);
+    }
+  }
+  function size_49(w) {
+    return function(h) {
+      return function(e) {
+        return newElement_38(e[2], w, h, e[5], e[6], e[7]);
+      }
+    }
+  }
+  function opacity_50(o) {
+    return function(e) {
+      return newElement_38(e[2], e[3], e[4], o, e[6], e[7]);
+    }
+  }
+  function color_51(c) {
+    return function(e) {
+	return newElement_38(e[2], e[3], e[4], e[5], ["Just",c], e[7]);
+    }
+  }
+  function link(lnk) {
+    return function(e) {
+	return newElement_38(e[2], e[3], e[4], e[5], e[6], ["Just", JS.castStringToJSString(lnk)]);
+    }
+  }
+  function widthOf_52(e)  { return ~~e[3]; }
+  function heightOf_53(e) { return ~~e[4]; }
+  function sizeOf_54(e)   { return["Tuple2", ~~e[3], ~~e[4]] }
+  function text_56(txt) {
+    var p = Value.getTextSize(0,0,txt);
+    return basicNewElement(EText_39("left")(txt), p[0], p[1])
+  }
+  function plainText(str) {
+    var txt = Value.toText(str);
+    var p = Value.getTextSize(0,0,txt);
+    return basicNewElement(EText_39("left")(txt),p[0],p[1])
+  }
+  function asText(v) {
+    var txt = Elm.Text.monospace(Value.toText(Value.show(v)));
+    var p = Value.getTextSize(0,0,txt);
+    return basicNewElement(EText_39("left")(txt),p[0],p[1])
+  }
+  function centeredText(txt) {
+    var p = Value.getTextSize(0,0,txt);
+    return basicNewElement(EText_39("center")(txt),p[0],p[1])
+  }
+  function justifiedText(txt) {
+    var p = Value.getTextSize(0,0,txt);
+    return basicNewElement(EText_39("justify")(txt),p[0],p[1])
+  }
+  function rightedText(txt) {
+    var p = Value.getTextSize(0,0,txt);
+    return basicNewElement(EText_39("right")(txt),p[0],p[1])
+  }
+  function image_57(w) {
+    return function(h) {
+      return function(src) {
+	  return basicNewElement(EImage_40(src),w,h)
+      }
+    }
+  }
+  function images(srcs) {
+      var pics = Elm.Signal.constant(spacer_66(0)(0));
+      var update = Elm.Signal.lift(function(src) {
+	      src = JS.castStringToJSString(src);
+	      var img = new Image();
+	      img.onload = function() {
+		  Dispatcher.notify(pics.id,
+				    image_57(this.width)(this.height)(src));
+	      };
+	      img.src = src;
+	  })(srcs);
+      function f(x) { return function(y) { return x; } }
+      var combine = Elm.Signal.lift2(f)(pics)(update);
+      return combine;
+  }
+  function video_58(w) {
+    return function(h) {
+      return function(src) {
+	  return basicNewElement(EVideo_41(src),w,h)
+      }
+    }
+  }
+  function fittedImage_59(w_147) {
+    return function(h_148) {
+      return function(s_149) {
+	  return basicNewElement(EFittedImage_42(s_149),w_147,h_148)
+      }
+    }
+  }
+  function flow_60(dir_150) {
+    return function(es_151) {
+      return function() {
+        var w_152 = function() {
+          var ws_154 = map(widthOf_52)(es_151);
+          return function(case1) {
+            var case0 = case1;
+            switch(case0[0]) {
+              case "DLeft":
+                return sum(ws_154);
+              case "DRight":
+                return sum(ws_154)
+            }
+            return maximum(ws_154)
+          }(dir_150)
+        }();
+        var h_153 = function() {
+          var hs_155 = map(heightOf_53)(es_151);
+          return function(case3) {
+            var case2 = case3;
+            switch(case2[0]) {
+              case "DDown":
+                return sum(hs_155);
+              case "DUp":
+                return sum(hs_155)
+            }
+            return maximum(hs_155)
+          }(dir_150)
+        }();
+        return basicNewElement(EFlow_43(dir_150)(es_151), w_152, h_153)
+      }()
+    }
+  }
+  function above_61(e1_156) {
+    return function(e2_157) {
+	return basicNewElement(EFlow_43(DDown_3)(["Cons", e1_156, ["Cons", e2_157, ["Nil"]]]), Math.max(widthOf_52(e1_156),widthOf_52(e2_157)), heightOf_53(e1_156) + heightOf_53(e2_157));
+    }
+  }
+  function below_62(e1_158) {
+    return function(e2_159) {
+	return basicNewElement(EFlow_43(DDown_3)(["Cons", e2_159, ["Cons", e1_158, ["Nil"]]]), Math.max(widthOf_52(e1_158),widthOf_52(e2_159)), heightOf_53(e1_158) + heightOf_53(e2_159));
+    }
+  }
+  function beside_63(e1_160) {
+    return function(e2_161) {
+	return basicNewElement(EFlow_43(DRight_1)(["Cons", e1_160, ["Cons", e2_161, ["Nil"]]]), widthOf_52(e1_160) + widthOf_52(e2_161), Math.max(heightOf_53(e1_160),heightOf_53(e2_161)));
+    }
+  }
+  function layers_64(es_162) {
+      return basicNewElement(EFlow_43(DOut_5)(es_162), maximum(map(widthOf_52)(es_162)), maximum(map(heightOf_53)(es_162)))
+  }
+  function collage_65(w_163) {
+    return function(h_164) {
+      return function(forms_165) {
+	  return basicNewElement(ECollage_44(w_163)(h_164)(forms_165),w_163,h_164)
+      }
+    }
+  }
+  function spacer_66(w_166) {
+    return function(h_167) {
+	return basicNewElement(EEmpty_45,w_166,h_167)
+    }
+  }
+  function container_67(w_169) {
+    return function(h_170) {
+      return function(pos_168) {
+        return function(e_171) {
+	    return basicNewElement(EContainer_46(pos_168)(e_171),w_169,h_170)
+        }
+      }
+    }
+  }
+  function segment_77(p1_172) {
+    return function(p2_173) {
+      return Line_75(["Cons", p1_172, ["Cons", p2_173, ["Nil"]]])
+    }
+  }
+  function rect_80(w_174) {
+    return function(h_175) {
+      return function(pos_176) {
+        return Shape_78(["Cons", ["Tuple2", 0 - w_174 / 2, 0 - h_175 / 2],
+			 ["Cons", ["Tuple2", 0 - w_174 / 2, h_175 / 2],
+			  ["Cons", ["Tuple2", w_174 / 2, h_175 / 2],
+			   ["Cons", ["Tuple2", w_174 / 2, 0 - h_175 / 2], ["Nil"]]]]])(pos_176)
+      }
+    }
+  }
+  function oval_81(w_177) {
+    return function(h_178) {
+      return function(pos_179) {
+        return function() {
+          var n_180 = 50;
+          return function() {
+            function f_181(i_182) {
+		return["Tuple2", w_177 / 2 * Math.cos(2 * (Math.PI / n_180) * i_182), h_178 / 2 * Math.sin(2 * (Math.PI / n_180) * i_182)];
+            }
+            return Shape_78(map(f_181)(function() {
+              var lo = 0;
+              var hi = n_180 - 1;
+              var lst = ["Nil"];
+              if(lo <= hi) {
+                do {
+                  lst = ["Cons", hi, lst]
+                }while(hi-- > lo)
+              }
+              return lst
+            }()))(pos_179)
+          }()
+        }()
+      }
+    }
+  }
+  function circle_82(r_183) {
+    return oval_81(2 * r_183)(2 * r_183)
+  }
+  function ngon_83(n_184) {
+    return function(r_185) {
+      return function(pos_186) {
+        return function() {
+          var m_187 = n_184;
+          return function() {
+            function f_188(i_189) {
+		return["Tuple2", r_185 * Math.cos(2 * (Math.PI / m_187) * i_189), r_185 * Math.sin(2 * (Math.PI / m_187) * i_189)];
+            }
+            return Shape_78(map(f_188)(function() {
+              var lo = 0;
+              var hi = n_184 - 1;
+              var lst = ["Nil"];
+              if(lo <= hi) {
+                do {
+                  lst = ["Cons", hi, lst]
+                }while(hi-- > lo)
+              }
+              return lst
+            }()))(pos_186)
+          }()
+        }()
+      }
+    }
+  }
+  function solid_89(clr_190) {
+    return function(ln_191) {
+      return Form_84(0)(1)(["Tuple2", 0, 0])(FLine_85(Solid_68)(clr_190)(ln_191))
+    }
+  }
+  function dotted_90(clr_192) {
+    return function(ln_193) {
+      return Form_84(0)(1)(["Tuple2", 0, 0])(FLine_85(Dotted_69)(clr_192)(ln_193))
+    }
+  }
+  function dashed_91(clr_194) {
+    return function(ln_195) {
+      return Form_84(0)(1)(["Tuple2", 0, 0])(FLine_85(Dashed_70)(clr_194)(ln_195))
+    }
+  }
+  function customLine_92(pattern_196) {
+    return function(clr_197) {
+      return function(ln_198) {
+        return Form_84(0)(1)(["Tuple2", 0, 0])(FLine_85(Custom_71(pattern_196))(clr_197)(ln_198))
+      }
+    }
+  }
+  function filled_93(clr) {
+    return function(shape) {
+      return Form_84(0)(1)(shape[2])(FShape_86(Filled_72)(clr)(shape));
+    }
+  }
+  function outlined_94(clr) {
+    return function(shape) {
+      return Form_84(0)(1)(shape[2])(FShape_86(Outlined_73)(clr)(shape));
+    }
+  }
+  function customOutline_95(pattern) {
+    return function(clr) {
+      return function(shape) {
+	  return Form_84(0)(1)(shape[2])(FShape_86(CustomOutline_74(pattern))(clr)(shape));
+      }
+    }
+  }
+  function textured(src) {
+    return function(shape) {
+      return Form_84(0)(1)(shape[2])(FShape_86(["Textured",src])(null)(shape));
+    }
+  }
+  function rotate_98(t_212) {
+    return function(Form$thetascaleposform_213) {
+      return function(case5) {
+        var case0 = case5;
+        switch(case0[0]) {
+          case "Form":
+            var case1 = case0[1], case2 = case0[2], case3 = case0[3], case4 = case0[4];
+            return Form_84(t_212 + case1)(case2)(case3)(case4)
+        }
+        throw"Non-exhaustive pattern match in case";
+      }(Form$thetascaleposform_213)
+    }
+  }
+  function scale_99(s) {
+    return function(form) {
+      return Form_84(form[1])(s * form[2])(form[3])(form[4])
+    }
+  }
+  function move_100(x_224) {
+    return function(y_225) {
+      return function(Form$thetascaleTuple2$pxpyform_226) {
+        return function(case7) {
+          var case0 = case7;
+          switch(case0[0]) {
+            case "Form":
+              var case1 = case0[1], case2 = case0[2], case3 = case0[3], case4 = case0[4];
+              switch(case3[0]) {
+                case "Tuple2":
+                  var case5 = case3[1], case6 = case3[2];
+                  return Form_84(case1)(case2)(["Tuple2", x_224 + case5, y_225 + case6])(case4)
+              }
+              break
+          }
+          throw"Non-exhaustive pattern match in case";
+        }(Form$thetascaleTuple2$pxpyform_226)
+      }
+    }
+  }
+  return{left:left_6, right:right_7, down:down_8, up:up_9, inward:inward_10, outward:outward_11, topLeft:topLeft_22, topRight:topRight_23, bottomLeft:bottomLeft_24, bottomRight:bottomRight_25, midLeft:midLeft_26, midRight:midRight_27, midTop:midTop_28, midBottom:midBottom_29, middle:middle_30, middleAt:middleAt, topLeftAt:topLeftAt_31, topRightAt:topRightAt_32, bottomLeftAt:bottomLeftAt_33, bottomRightAt:bottomRightAt_34, absolute:absolute_35, relative:relative_36, width:width_47, height:height_48, size:size_49, opacity:opacity_50, 
+	 color:color_51, link:link, widthOf:widthOf_52, heightOf:heightOf_53, sizeOf:sizeOf_54, text:text_56, asText:asText, plainText:plainText, centeredText:centeredText, justifiedText:justifiedText, rightedText:rightedText, image:image_57, images:images, video:video_58, fittedImage:fittedImage_59, flow:flow_60, above:above_61, below:below_62, beside:beside_63, layers:layers_64, collage:collage_65, spacer:spacer_66, container:container_67, line:line_76, segment:segment_77, polygon:polygon_79, rect:rect_80, oval:oval_81, circle:circle_82, ngon:ngon_83, solid:solid_89, dotted:dotted_90, dashed:dashed_91, customLine:customLine_92, filled:filled_93, 
+	 outlined:outlined_94, customOutline:customOutline_95, textured:textured, sprite:sprite_96, toForm:toForm_97, rotate:rotate_98, scale:scale_99, move:move_100,
+	 isWithin: Collage.insideForm}
+}();
+Elm.Text = function() {
+  function fromString(s) { return Value.toText(s); }
+
+  var addTag = function(tag) { return function(text) {
+	return '<' + tag + ' style="padding:0;margin:0">' + text + '</' + tag + '>';
+    };
+  };
+  var addStyle = function(style, value) { return function(text) {
+	return "<span style='" + style + ":" + value + "'>" + text + "</span>";
+    };
+  };
+
+  var typeface = function(name) {
+      name = Elm.JavaScript.castStringToJSString(name);
+      return addStyle('font-family', name);
+  };
+  var size = function(px) {
+    return addStyle('font-size', px + 'px');
+  };
+  var header = addTag('h1');
+  var height = function(h) { return addStyle('font-size', h+'em'); }
+  var italic = addStyle('font-style', 'italic');
+  var bold = addTag('b');
+  var color = function(c) {
+    return addStyle('color', Elm.Color.extract(c));
+  };
+  var underline = addStyle('text-decoration', 'underline');
+  var overline = addStyle('text-decoration', 'overline');
+  var strikeThrough = addStyle('text-decoration', 'line-through');
+  var link = function(href) { return function(text) {
+      return "<a href='" + fromString(href) + "'>" + text + "</a>";
+    };
+  };
+
+  return {fromString : fromString,
+	  toText: fromString,
+	  header : header,
+	  height : height,
+	  italic : italic,
+	  bold : bold,
+	  underline : underline,
+	  overline : overline,
+	  strikeThrough : strikeThrough,
+	  monospace : typeface('monospace'),
+	  typeface : typeface,
+	  color : color,
+	  link : link };
+}();
+
+var Render = function(){
+
+function newElement(elementType) {
+    var e = document.createElement(elementType);    
+    e.style.padding = "0";
+    e.style.margin = "0";
+    return e;
+};
+
+function addTo(container, elem) {
+    container.appendChild(elem);
+};
+
+function makeText(pos,txt) {
+    var e = newElement('div');
+    e.innerHTML = txt;
+    e.style.textAlign = pos;
+    return e;
+};
+
+function image(src) {
+    var img = newElement('img');
+    img.src = src;
+    img.name = src;
+    img.style.display = "block";
+    return img;
+}
+
+function fittedImage(w,h,src) {
+    var e = newElement('div');
+    e.style.width  = w + 'px';
+    e.style.height = h + 'px';
+    e.style.position = "relative";
+    e.style.overflow = "hidden";
+
+    var img = newElement('img');
+    img.onload = function() {
+	img.style.position = 'absolute';
+	img.style.margin = 'auto';
+
+	var sw = w, sh = h;
+	if (w / h > this.width / this.height) {
+	    sh = Math.round(this.height * w / this.width);
+	} else {
+	    sw = Math.round(this.width * h / this.height);
+	}
+	img.style.width = sw + 'px';
+	img.style.height = sh + 'px';
+	img.style.left = ((w - sw) / 2) + 'px';
+	img.style.top = ((h - sh) / 2) + 'px';
+    };
+    img.src = src;
+    img.name = src;
+    addTo(e,img);
+    return e;
+};
+
+var video = function(src) {
+    var e = newElement('video');
+    e.controls = "controls";
+    var source = newElement('source');
+    source.src = src;
+    var segs = src.split('.');
+    source.type = "video/" + segs[segs.length-1];
+    addTo(e, source);
+    e.style.display = "block";
+    return e;
+};
+
+function divify(e) {
+    var div = newElement('div');
+    addTo(div, e);
+    return div;
+};
+function goDown(e) {
+    return e //.tagName === "DIV" ? e : divify(e);
+};
+function goRight(e) {
+    e.style.styleFloat = "left";
+    e.style.cssFloat = "left";
+    return e;
+};
+function goIn(e) {
+    e.style.position = 'absolute';
+    return e;
+};
+function flowWith(f, prep, elist) {
+    var container = newElement('div');
+    for (var i = elist.length; i--; ) {
+	addTo(container, f(prep(elist[i])));
+    }
+    return container;
+};
+
+function flow(dir,elist) {
+    switch(dir) {
+    case "DDown":  elist = elist.slice(0).reverse();
+    case "DUp":    return flowWith(goDown,render,elist);
+    case "DRight": elist = elist.slice(0).reverse();
+    case "DLeft":  return flowWith(goRight,render,elist);
+    case "DOut":   elist = elist.slice(0).reverse();
+    case "DIn":    return flowWith(goIn,render,elist);
+    };
+};
+
+function toPos(pos) {
+    switch(pos[0]) {
+    case "Absolute": return  pos[1] + "px";
+    case "Relative": return (pos[1] * 100) + "%";
+    }
+}
+
+function setPos(pos,e) {
+  e.style.position = 'absolute';
+  e.style.margin = 'auto';
+  switch(pos[0]) {
+  case "Position":
+      if (pos[1][0] !== "Far")  e.style.left = 0;
+      if (pos[1][0] !== "Near") e.style.right = 0;
+      if (pos[2][0] !== "Far")  e.style.top = 0;
+      if (pos[2][0] !== "Near") e.style.bottom = 0;
+      break;
+  case "PositionAt":
+      e.style.top  = toPos(pos[2]);
+      e.style.left = toPos(pos[1]);
+      var shift = "translate(" + ~~(-e.style.width.slice(0,-2) / 2) + "px," + ~~(-e.style.height.slice(0,-2) / 2) + "px)";
+      e.style.transform       = shift;
+      e.style.msTransform     = shift;
+      e.style.MozTransform    = shift;
+      e.style.webkitTransform = shift;
+      e.style.OTransform      = shift;
+      break;
+  default:
+      var p = pos[0].slice(-2);
+      e.style[p[0] === "T" ? 'top' : 'bottom'] = toPos(pos[2]);
+      e.style[p[1] === "L" ? 'left' : 'right'] = toPos(pos[1]);
+  }
+}
+
+function container(pos,elem) {
+    var e = render(elem);
+    setPos(pos,e);
+    var div = newElement('div');
+    div.style.position = "relative";
+    div.style.overflow = "hidden";
+    addTo(div,e);
+    return div;
+};
+
+function render(elem) {
+    var e = {};
+    switch(elem[2][0]) {
+    case "EText":        e = makeText(elem[2][1],elem[2][2]); break;
+    case "EImage":       e = image(elem[2][1]); break;
+    case "EVideo":       e = video(elem[2][1]); break;
+    case "EFittedImage": e = fittedImage(elem[3],elem[4],elem[2][1]); break;
+    case "EFlow":        e = flow(elem[2][1][0],elem[2][2]); break;
+    case "ECollage":     e = Collage.collage(elem[2][1],elem[2][2],elem[2][3]); break;
+    case "EEmpty":       e = newElement('div'); break;
+    case "EContainer":   e = container(elem[2][1],elem[2][2]); break;
+    case "EHtml":
+	e = elem[2][1];
+	if (e.type !== 'button') {
+	    var p = Value.getExcess(e);
+	    elem[3] -= p[0];
+	    elem[4] -= p[1];
+	}
+	break;
+    case "EExternalHtml":
+	e = newElement('div');
+	addTo(e, elem[2][1]);
+	break;
+    }
+    e.id = elem[1];
+    e.style.width  = (~~elem[3]) + 'px';
+    e.style.height = (~~elem[4]) + 'px';
+    if (elem[5] !== 1) { e.style.opacity = elem[5]; }
+    if (elem[6][0] === "Just") {
+	e.style.backgroundColor = Elm.Color.extract(elem[6][1]);
+    }
+    if (elem[7][0] === "Just") {
+	var a = newElement('a');
+	a.href = elem[7][1];
+	addTo(a,e);
+	return a;
+    }
+    return e;
+};
+
+function update(node,curr,next) {
+    if (node.tagName === 'A') { node = node.firstChild; }
+    if (curr[1] === next[1]) return;
+    if (curr[2][0] !== next[2][0]) {
+	return node.parentNode.replaceChild(render(next),node);
+    }
+    var nextE = next[2], currE = curr[2];
+    switch(nextE[0]) {
+    case "EText":
+	if (nextE[1] !== currE[1]) node.style.textAlign = nextE[1];
+	if (nextE[2] !== currE[2]) node.innerHTML = nextE[2];
+	break;
+    case "EImage":
+	if (nextE[1] !== currE[1]) node.src = nextE[1];
+	break;
+    case "EVideo":
+    case "EFittedImage":
+	if (!Value.eq(nextE,currE) || next[3]!==curr[3] || next[4]!==curr[4]) {
+	    return node.parentNode.replaceChild(render(next),node);
+	}
+    break;
+    case "ECollage":
+	if (nextE[1] !== currE[1] || nextE[2] !== currE[2] || nextE[3].length !== currE[3].length) {
+	    return node.parentNode.replaceChild(render(next),node);
+	}
+	Collage.updateCollage(node,currE[3],nextE[3]);
+	break;
+    case "EFlow":
+	if (nextE[1] !== currE[1]) {
+	    return node.parentNode.replaceChild(render(next),node);
+	}
+	var nexts = nextE[2];
+	var kids = node.childNodes;
+	if (nexts.length !== kids.length) {
+	    return node.parentNode.replaceChild(render(next),node);
+	}
+	var currs = currE[2];
+	var goDir = function(x) { return x; };
+	switch(nextE[1][0]) {
+	case "DDown":  case "DUp":   goDir = goDown; break;
+	case "DRight": case "DLeft": goDir = goRight; break;
+	case "DOut":   case "DIn":   goDir = goIn; break;
+	}
+	for (var i = kids.length; i-- ;) {
+	    update(kids[i],currs[i],nexts[i]);
+	    goDir(kids[i]);
+	}
+	break;
+    case "EContainer":
+	update(node.childNodes[0],currE[2],nextE[2]);
+	setPos(nextE[1],node.childNodes[0]);
+	break;
+    case "EEmpty":
+	break;
+    case "EHtml":
+	if (next[1] !== curr[1]) {
+	    var e = render(next);
+	    node.parentNode.replaceChild(e,node);
+	    node = e;
+	}
+	if (e.type !== 'button') {
+	    var p = Value.getExcess(node);
+	    next[3] -= p[0];
+	    next[4] -= p[1];
+	}
+	break;
+    case "EExternalHtml":
+	if (next[1] !== curr[1])
+	    node.parentNode.replaceChild(render(next),node);
+	break;
+    }
+    if (next[3] !== curr[3]) node.style.width   = (~~next[3]) + 'px';
+    if (next[4] !== curr[4]) node.style.height  = (~~next[4]) + 'px';
+    if (next[5] !== curr[5]) node.style.opacity = next[5];
+    if (next[6].length === 2) {
+	var clr = Elm.Color.extract(next[6][1]);
+	if (clr !== node.style.backgroundColor) node.style.backgroundColor = clr;
+    }
+    if (next[7].length === 2) {
+	if (curr[7].length === 1 || next[7][1] !== curr[7][1]) node.parentNode.href = next[7][1];
+    }
+    next[1] = curr[1];
+}
+
+return {render:render,update:update,addTo:addTo,newElement:newElement,flowWith:flowWith,goIn:goIn};
+
+}(); 
+Elm.Signal = function() {
+  var send = function(node, timestep, changed) {
+    var kids = node.kids;
+    for (var i = kids.length; i--; ) {
+      kids[i].recv(timestep, changed, node.id);
+    }
+  };
+  /**
+   * @constructor
+   */
+  function input(base) {
+    this.id = Guid.guid();
+    this.value = base;
+    this.kids = [];
+    this.defaultNumberOfKids = 0;
+    this.recv = function(timestep, eid, v) {
+      var changed = eid === this.id;
+      if (changed) { this.value = v; }
+      send(this, timestep, changed);
+      return changed;
+    };
+    Dispatcher.inputs.push(this);
+  };
+  /**
+   * @constructor
+   */
+  function lift(func,args) {
+    this.id = Guid.guid();
+    this.value = null;
+    this.kids = [];
+    this.count = 0;
+    this.changed = false;
+    
+    args.reverse();
+    this.recalc = function() {
+	var f = func;
+	for (var i = args.length; i--; ) {
+	    f = f(args[i].value);
+	}
+	this.value = f;
+    };
+    this.recalc();
+    
+    this.recv = function(timestep, changed, parentID) {
+      this.count += 1;
+      if (changed) { this.changed = true; }
+      if (this.count == args.length) {
+	  if (this.changed) { this.recalc() }
+	  send(this, timestep, this.changed);
+	  this.changed = false;
+	  this.count = 0;
+      }
+    };
+    for (var i = args.length; i--; ) {
+      args[i].kids.push(this);
+    }
+  };
+  /**
+   * @constructor
+   */
+  function fold(func,base,baseIsFunc,input) {
+    this.id = Guid.guid();
+    this.value = baseIsFunc ? base(input.value) : base;
+    this.kids = [];
+    this.recv = function(timestep, changed, parentID) {
+      if (changed) { this.value = func(input.value)(this.value); }
+      send(this, timestep, changed);
+    };
+    input.kids.push(this);
+  };
+
+  /**
+   * @constructor
+   */
+  function dropIf(pred,base,input) {
+    this.id = Guid.guid();
+    this.value = pred(input.value) ? base : input.value;
+    this.kids = [];
+    this.recv = function(timestep, changed, parentID) {
+	var chng = changed && !pred(input.value);
+	if (chng) { this.value = input.value; }
+	send(this, timestep, chng);
+    };
+    input.kids.push(this);
+  };
+
+  /**
+   * @constructor
+   */
+  function dropRepeats(input) {
+      this.id = Guid.guid();
+      this.value = input.value;
+      this.kids = [];
+      this.recv = function(timestep, changed, parentID) {
+	  var chng = changed && !Value.eq(this.value,input.value);
+	  if (chng) { this.value = input.value; }
+	  send(this, timestep, chng);
+      };
+      input.kids.push(this);
+  };
+  
+  var dropWhen = function(s1) { return function(b) { return function(s2) {
+    var pairs = new lift(function(x){return function(y){return [x,y];};},[s1,s2]);
+    var dropped = new dropIf(function(p){return p[0];},[true,b],pairs);
+    return new lift(function(p){return p[1];},[dropped]); }; };
+  };
+
+  /**
+   * @constructor
+   */
+  function timeIndex(pair,s) {
+      this.id = Guid.guid();
+      var t = (new window.Date).getTime();
+      this.value = pair ? Value.Tuple(t,s.value) : t;
+      this.kids = [];
+      this.recv = function(timestep, changed, parentID) {
+	  if (changed) this.value = pair ? Value.Tuple(timestep, s.value) : timestep;
+	  send(this, timestep, changed);
+      };
+      s.kids.push(this);
+  }
+
+  /**
+   * @constructor
+   */
+  function sampleOn(s1,s2) {
+    this.id = Guid.guid();
+    this.value = s2.value;
+    this.kids = [];
+    this.count = 0;
+    this.changed = false;
+    
+    this.recv = function(timestep, changed, parentID) {
+	if (parentID === s1.id) this.changed = changed;
+	this.count += 1;
+	if (this.count == 2) {
+	    if (this.changed) { this.value = s2.value; }
+	    send(this, timestep, this.changed);
+	    this.count = 0;
+	    this.changed = false;
+	}
+    };
+    s1.kids.push(this);
+    s2.kids.push(this);
+  };
+
+  function delay(t) { return function(s) {
+      var delayed = new input(s.value);
+      var firstEvent = true;
+      function update(v) {
+	  if (firstEvent) return;
+	  setTimeout(function() { Dispatcher.notify(delayed.id,v); },t);
+      }
+      function first(a) { return function(b) { return a; }; }
+      var out = new sampleOn(delayed,new lift(first, [delayed, new lift(update,[s])]));
+      firstEvent = false;
+      return out;
+    };
+  }
+  
+  /**
+   * @constructor
+   */
+  function merge(s1,s2) {
+    this.id = Guid.guid();
+    this.value = s1.value;
+    this.kids = [];
+    this.next = null;
+    this.count = 0;
+    this.changed = false;
+    
+    this.recv = function(timestep, changed, parentID) {
+      this.count += 1;
+      if (changed) {
+	  this.changed = true;
+	  if (parentID == s2.id && this.next === null) { this.next = s2.value; }
+	  if (parentID == s1.id) { this.next = s1.value; }
+      }
+
+      if (this.count == 2) {
+	  if (this.changed) {
+	      this.value = this.next;
+	      this.next = null;
+	  }
+	  send(this, timestep, this.changed);
+	  this.changed = false;
+	  this.count = 0;
+      }
+    };
+    s1.kids.push(this);
+    s2.kids.push(this);
+  };
+
+  function merges(ss) {
+      function mrg(x) { return function(y) { return new merge(x,y); }; }
+      return Elm.List.foldl1(mrg)(ss);
+  }
+
+  function mergeEither(s1) { return function(s2) {
+      function f(s) { return function(x) { return [s,x]; }; }
+      return new merge(new lift(f('Left'),[s1]), new lift(f('Right'),[s2]));
+    };
+  }
+
+  function average(sampleSize) { return function(s) {
+    var sample = new Array(sampleSize);
+    var i = sampleSize;
+    while (i--) sample[i] = 0;
+    i = 0;
+    var full = false;
+    var total = 0;
+    function f(n) {
+	total += n - sample[i];
+	sample[i] = n;
+	var avg = total / Math.max(1, full ? sampleSize : i);
+	if (++i == sampleSize) { full = true; i = 0; }
+	return avg;
+    }
+    return new lift(f, [s]);
+   };
+  }
+
+  return {
+    constant : function(v) { return new input(v); },
+    lift  : function(f){return function(e){return new lift(f,[e]);};},
+    lift2 : function(f) {
+	      return function(e1) { return function(e2) {
+	      return new lift(f, [e1,e2]); };};},
+    lift3 : function(f) {
+	      return function(e1) { return function(e2) {
+	      return function(e3){return new lift(f,[e1,e2,e3]);};};};},
+    lift4 : function(f) {
+	      return function(e1) { return function(e2) {
+	      return function(e3) { return function(e4) {
+	      return new lift(f, [e1,e2,e3,e4]);};};};};},
+    lift5 : function(f) {
+	      return function(e1) { return function(e2) {
+	      return function(e3) { return function(e4) {
+	      return function(e5) {
+	      return new lift(f, [e1,e2,e3,e4,e5]);};};};};};},
+    lift6 : function(f) { return function(e1) { return function(e2) {
+              return function(e3) { return function(e4) {
+              return function(e5) { return function(e6) {
+	      return new lift(f, [e1,e2,e3,e4,e5,e6]); };};};};};};},
+    lift7 : function(f) { return function(e1) { return function(e2) {
+              return function(e3) { return function(e4) {
+              return function(e5) { return function(e6) {
+              return function(e7) {
+              return new lift(f, [e1,e2,e3,e4,e5,e6,e7]);};};};};};};};},
+    lift8 : function(f) { return function(e1) { return function(e2) {
+              return function(e3) { return function(e4) {
+              return function(e5) { return function(e6) {
+              return function(e7) { return function(e8) {
+              return new lift(f, [e1,e2,e3,e4,e5,e6,e7,e8]);};};};};};};};};},
+    foldp : function(f) { return function(b) { return function(e) {
+		  return new fold(f,b,false,e); }; }; },
+    foldp$ : function(f) { return function(b) { return function(e) {
+		  return new fold(f,b,true,e); }; }; },
+    foldp1 : function(f) { return function(e) {
+	      return new fold(f,function(x){return x;},true,e); }; },
+    delay : delay,
+    merge : function(s1) { return function(s2) { return new merge(s1,s2)}; },
+    merges : merges,
+    mergeEither : mergeEither,
+    average : average,
+    count : function(sig) {
+	  var incr = function(_){return function(c){return c+1;};};
+	  return new fold(incr,0,false,sig) },
+    countIf : function(pred) { return function(sig) {
+	      var incr = function(x){return function(c){return pred(x) ? c+1 : c;};};
+	      return new fold(incr,0,false,sig) }; },
+    keepIf : function(pred) { return function(base) { return function(sig) {
+		  return new dropIf(function(x) { return !pred(x)},base,sig); }; }; },
+    dropIf : function(pred) { return function(base) { return function(sig) {
+		  return new dropIf(pred,base,sig); }; }; },
+    keepWhen : function(s) { return dropWhen(new lift(function(b){return !b;},[s])); },
+    dropWhen : dropWhen,
+    dropRepeats : function(s) { return new dropRepeats(s);},
+    sampleOn : function(s1){return function(s2){return new sampleOn(s1,s2);};},
+    timestamp : function(s) { return new timeIndex(true, s); },
+    timeOf : function(s) { return new timeIndex(false, s); }
+  };
+}();
+var Dispatcher = function() {
+    var program = null;
+    var inputs = [];
+    var currentElement = null;
+
+    var initialize = function() {
+	program = Elm.main();
+	if (!program.hasOwnProperty('recv')) {
+	    program = Elm.Signal.constant(program);
+	}
+
+	currentElement = program.value;
+	filterDeadInputs();
+
+	var content = document.getElementById('content');
+	content.appendChild(Render.render(currentElement));
+	var w = document.getElementById('widthChecker').offsetWidth;
+	if (w !== window.innerWidth) {
+	    Dispatcher.notify(Elm.Window.dimensions.id, Value.Tuple(w, window.innerHeight));
+	}
+	program = Elm.Signal.lift(function(value) {
+		var content = document.getElementById('content');
+		Render.update(content.firstChild,currentElement,value);
+		currentElement = value;
+		return value;
+	    })(program);
+    };
+    var notify = function(id, v) {
+	var timestep = (new window.Date).getTime();
+	var hasListener = false;
+	for (var i = inputs.length; i--; ) {
+	    hasListener = inputs[i].recv(timestep, id, v) || hasListener;
+	}
+	return hasListener;
+    };
+
+    function isAlive(input) {
+	if (!input.hasOwnProperty('defaultNumberOfKids')) return true;
+	var len = input.kids.length;
+	if (len == 0) return false;
+	if (len > input.defaultNumberOfKids) return true;
+	var alive = false;
+	for (var i = len; i--; ) {
+	    alive = alive || isAlive(input.kids[i]);
+	}
+	return alive;
+    }
+    function filterDeadInputs() {
+	var temp = [];
+	for (var i = inputs.length; i--; ) {
+	    if (isAlive(inputs[i])) temp.push(inputs[i]);
+	}
+	inputs = temp;
+    }
+
+    return {initialize:initialize, notify:notify, inputs:inputs};
+}();Elm.HTTP = function() {
+  var JS = Elm.JavaScript;
+  var toElmString = Elm.JavaScript.castJSStringToString;
+  function request(verb) { return function(url) { return function(data) {
+    return function(headers) {
+	return {0 : "Request",
+		length : 1,
+		verb : JS.castStringToJSString(verb),
+		url : JS.castStringToJSString(url),
+		data : data === null ? null : JS.castStringToJSString(data),
+		headers : headers }; }; }; };
+  }
+  function get(url) { return request("GET")(url)(null)(["Nil"]); }
+  function post(url) { return function(data) {
+	  return request("POST")(url)(data)(["Nil"]); }; }
+
+  function registerReq(queue,responses) { return function(req) {
+    if (req.url !== "") { sendReq(queue,responses,req); }
+   };
+  }
+
+  function updateQueue(queue,responses) {
+      if (queue.length > 0) {
+	Dispatcher.notify(responses.id, queue[0].value);
+        if (queue[0].value[0] !== "Waiting") {
+	  queue.shift();
+	  setTimeout(function() { updateQueue(queue,responses); }, 0);
+	}
+      }
+  }
+
+  function sendReq(queue,responses,req) {
+    var response = { value: ["Waiting"] };
+    queue.push(response);
+
+    var request = null;
+    if (window.ActiveXObject)  { request = new ActiveXObject("Microsoft.XMLHTTP"); }
+    if (window.XMLHttpRequest) { request = new XMLHttpRequest(); }
+    request.onreadystatechange = function(e) {
+	if (request.readyState === 4) {
+	    response.value = (request.status === 200
+			      ? ["Success", toElmString(request.responseText)]
+			      : ["Failure", request.status,
+				 toElmString(request.statusText)]);
+	    setTimeout(function() { updateQueue(queue,responses); }, 0);
+	}
+    };
+    request.open(req.verb, req.url, true);
+    Elm.List.map(function(pair) {
+	    request.setRequestHeader(
+		JS.castStringToJSString(pair[1]),
+		JS.castStringToJSString(pair[2]));
+	  })(req.headers);
+    request.send(req.data);
+    return null;
+  }
+
+  function send(requests) {
+    var responses = Elm.Signal.constant(["Waiting"]);
+    var sender = Elm.Signal.lift(registerReq([],responses))(requests);
+    function f(x) { return function(y) { return x; } }
+    var combine = Elm.Signal.lift2(f)(responses)(sender);
+    return combine;
+  }
+
+  return {get   : get,
+	  post  : post,
+	  request : request,
+	  send  : send,
+	  sendGet : function(urls){return send(Elm.Signal.lift(get)(urls));}
+	  };
+}();
+
+Elm.Input = function() {
+    var JS = Elm.JavaScript;
+    var toElmString = Elm.JavaScript.castJSStringToString;
+    var newTextInput = function(elem, ghostText) {
+	elem.placeholder = JS.castStringToJSString(ghostText);
+	var str = Elm.Signal.constant(["Nil"]);
+	Value.addListener(elem, 'keyup', function(e) {
+		Dispatcher.notify(str.id, toElmString(elem.value));
+		elem.focus();
+	    });
+	elem.style.padding = "1px";
+	return Value.Tuple(Value.wrap(elem), str);
+    };
+    var newElement = function(name) {
+	var e = document.createElement(name);
+	e.style.padding = "0";
+	e.style.margin = "0";
+	return e;
+    };
+    var textArea = function(cols) { return function(rows) {
+	    var textarea = newElement('textarea');
+	    textarea.rows = rows;
+	    textarea.cols = cols;
+	    return newTextInput(textarea, "");
+	};
+    };
+    var textField = function(ghostText) {
+	var field = newElement('input');
+	field.type = 'text';
+	return newTextInput(field, ghostText);
+    };
+    var password = function(ghostText) {
+	var field = newElement('input');
+	field.type = 'password';
+	return newTextInput(field, ghostText);
+    };
+    var checkbox = function(checked) {
+	var box = newElement('input');
+	box.type = 'checkbox';
+	box.checked = checked;
+	var status = Elm.Signal.constant(checked);
+	Value.addListener(box, 'change', function(e) {
+		Dispatcher.notify(status.id, box.checked);
+	    });
+	return Value.Tuple(Value.wrap(box), status);
+    };
+    var dropDown = function(options) {
+	var slct = newElement('select');
+	var opts = [];
+	while (options[0] === "Cons") {
+	    var opt = newElement('option');
+	    var str = Value.toText(options[1][1]);
+	    opt.value = str;
+	    opt.innerHTML = str;
+	    slct.appendChild(opt);
+	    opts.push(options[1][2]);
+	    options = options[2];
+	}
+	var status = Elm.Signal.constant(opts[0]);
+	Value.addListener(slct, 'change', function(e) {
+		Dispatcher.notify(status.id, opts[slct.selectedIndex]);
+	    });
+	return Value.Tuple(Value.wrap(slct), status);
+    };
+    var stringDropDown = function(opts) {
+	return dropDown(Elm.List.map (function(x) {return Value.Tuple(x,x);}) (opts));
+    };
+    var button = function(name) {
+	var b = newElement('input');
+	b.type = "button";
+	b.value = JS.castStringToJSString(name);
+	var press = Elm.Signal.constant(false);
+	Value.addListener(b, 'click', function(e) {
+		Dispatcher.notify(press.id, true);
+		Dispatcher.notify(press.id, false);
+	    });
+	return Value.Tuple(Value.wrap(b),press);
+    };
+    return {textArea:textArea, textField:textField,
+	    password:password, checkbox:checkbox,
+	    dropDown:dropDown, stringDropDown:stringDropDown,
+	    button:button};
+}();
+
+Elm.Keyboard = { Raw : function() {
+  var keysDown = Elm.Signal.constant(["Nil"]);
+  var charPressed = Elm.Signal.constant(["Nothing"]);
+
+  function remove(x,xs) {
+	if (xs[0] === "Nil") return xs;
+	if (xs[1] === x) return xs[2];
+	return ["Cons", xs[1], remove(x,xs[2])];
+  }
+  function has(x,xs) {
+	while (xs[0] !== "Nil") {
+	  if (xs[1] === x) return true;
+	  xs = xs[2];
+	}
+	return false;
+  }
+  Value.addListener(document, 'keydown', function(e) {
+	  if (has(e.keyCode, keysDown.value)) return;
+	  var hasListener = Dispatcher.notify(keysDown.id, ["Cons", e.keyCode, keysDown.value]);
+	  if (!hasListener)
+		this.removeEventListener('keydown',arguments.callee,false);
+	});
+  Value.addListener(document, 'keyup', function(e) {
+	  var codes = remove(e.keyCode, keysDown.value);
+	  var hasListener = Dispatcher.notify(keysDown.id, codes);
+	  if (!hasListener)
+		this.removeEventListener('keyup',arguments.callee,false);
+	});
+  Value.addListener(window, 'blur', function(e) {
+	  var hasListener = Dispatcher.notify(keysDown.id, ["Nil"]);
+	  if (!hasListener)
+		this.removeEventListener('blur',arguments.callee,false);
+	});
+  Value.addListener(document, 'keypress', function(e) {
+	  var hasListener = Dispatcher.notify(charPressed.id, ["Just",e.charCode || e.keyCode]);
+	  Dispatcher.notify(charPressed.id, ["Nothing"]);
+	  if (!hasListener)
+		this.removeEventListener('keypress',arguments.callee,false);
+	});
+  return {keysDown:keysDown,
+	  charPressed:charPressed};
+    }()
+};
+
+(function() {
+  function keySignal(f) {
+    var signal = Elm.Signal.lift(f)(Elm.Keyboard.Raw.keysDown);
+    Elm.Keyboard.Raw.keysDown.defaultNumberOfKids += 1;
+    signal.defaultNumberOfKids = 0;
+    return signal;
+  }
+
+  function dir(left,right,up,down) {
+    function f(ks) {
+      var x = 0, y = 0;
+      while (ks[0] == "Cons") {
+	switch (ks[1]) {
+	case left : --x; break;
+	case right: ++x; break;
+	case up   : ++y; break;
+	case down : --y; break;
+	}
+	ks = ks[2];
+      }
+      return { _:[true], x:[x], y:[y] };
+    }
+    return keySignal(f);
+  }
+
+  function is(key) {
+    function f(ks) {
+      while (ks[0] == "Cons") {
+	if (key == ks[1]) return true;
+	ks = ks[2];
+      }
+      return false;
+    }
+    return keySignal(f);
+  }
+
+  Elm.Keyboard.arrows = dir(37,39,38,40);
+  Elm.Keyboard.wasd   = dir(65,68,87,83);
+  Elm.Keyboard.shift  = is(16);
+  Elm.Keyboard.ctrl   = is(17);
+  Elm.Keyboard.space  = is(32);
+
+}());
+
+Elm.Mouse = function() {
+  var position  = Elm.Signal.constant(Value.Tuple(0,0));
+  position.defaultNumberOfKids = 2;
+
+  var x = Elm.Signal.lift(function(p){return p[1];})(position);
+  x.defaultNumberOfKids = 0;
+  var y = Elm.Signal.lift(function(p){return p[2];})(position);
+  y.defaultNumberOfKids = 0;
+
+  var isDown    = Elm.Signal.constant(false);
+  var isClicked = Elm.Signal.constant(false);
+  var clicks = Elm.Signal.constant(Value.Tuple());
+  
+  function getXY(e) {
+    var posx = 0;
+    var posy = 0;
+    if (!e) e = window.event;
+    if (e.pageX || e.pageY) {
+	posx = e.pageX;
+	posy = e.pageY;
+    } else if (e.clientX || e.clientY) 	{
+	posx = e.clientX + document.body.scrollLeft +
+	  document.documentElement.scrollLeft;
+	posy = e.clientY + document.body.scrollTop +
+	  document.documentElement.scrollTop;
+    }
+    return Value.Tuple(posx, posy);
+  }
+
+  Value.addListener(document, 'click', function(e) {
+	  var hasListener1 = Dispatcher.notify(isClicked.id, true);
+	  var hasListener2 = Dispatcher.notify(clicks.id, Value.Tuple());
+	  Dispatcher.notify(isClicked.id, false);
+	  if (!hasListener1 && !hasListener2)
+		this.removeEventListener('click',arguments.callee,false);
+	});
+  Value.addListener(document, 'mousedown', function(e) {
+	  var hasListener = Dispatcher.notify(isDown.id, true);
+	  if (!hasListener)
+		this.removeEventListener('mousedown',arguments.callee,false);
+	});
+  Value.addListener(document, 'mouseup', function(e) {
+	  var hasListener = Dispatcher.notify(isDown.id, false);
+	  if (!hasListener)
+		this.removeEventListener('mouseup',arguments.callee,false);
+	});
+  Value.addListener(document, 'mousemove', function(e) {
+	  var hasListener = Dispatcher.notify(position.id, getXY(e));
+	  if (!hasListener)
+		this.removeEventListener('mousemove',arguments.callee,false);
+	});
+  var clickedOn = function(elem) {
+	var node = Render.render(elem);
+	var click = Elm.Signal.constant(false);
+	Value.addListener(node, 'click', function(e) {
+		Dispatcher.notify(click.id, true);
+		Dispatcher.notify(click.id, false);
+	  });
+	return Value.Tuple(Value.wrap(node), click);
+  };
+  return {position: position,
+	  x:x,
+	  y:y,
+	  isClicked: isClicked,
+	  isDown: isDown,
+	  clicks: clicks,
+	  isClickedOn: clickedOn
+	  };
+  }();
+Elm.Random = function() {
+  var inRange = function(min) { return function(max) {
+      return Elm.Signal.constant(Math.floor(Math.random() * (max-min+1)) + min);
+    };
+  };
+  var randomize = function(min) { return function(max) { return function(signal) {
+      function f(x) { return Math.floor(Math.random() * (max-min+1)) + min; }
+      return Elm.Signal.lift(f)(signal);
+    };
+   };
+  };
+  return { inRange:inRange, randomize:randomize };
+}();Elm.Time = function() {
+  function timeNow() { return (new window.Date).getTime(); }
+  function everyWhen(isOn) { return function(t) {
+      var clock = Elm.Signal.constant(timeNow());
+      function tellTime() { Dispatcher.notify(clock.id, timeNow()); }
+      setInterval(tellTime, t);
+      return clock;
+    };
+  }
+  function fpsWhen(desiredFPS) { return function (isOn) {
+      var msPerFrame = 1000 / desiredFPS;
+      var prev = timeNow(), curr = prev, diff = 0, wasOn = true;
+      var ticker = Elm.Signal.constant(diff);
+      function tick(zero) { return function() {
+	  curr = timeNow();
+	  diff = zero ? 0 : curr - prev;
+	  prev = curr;
+	  Dispatcher.notify(ticker.id, diff);
+        };
+      }
+      var timeoutID = 0;
+      function f(isOn) { return function(t) {
+	if (isOn) {
+	    timeoutID = setTimeout(tick(!wasOn && isOn), msPerFrame);
+	} else if (wasOn) {
+	    clearTimeout(timeoutID);	    
+	}
+	wasOn = isOn;
+	return t;
+       };
+      }
+      return Elm.Signal.lift2(f)(isOn)(ticker);
+    };
+  }
+  function since(t) { return function(s) {
+	  function cmp(a) { return function(b) { return !Value.eq(a,b); }; }
+	  var dcount = Elm.Signal.count(Elm.Signal.delay(t)(s));
+	  return Elm.Signal.lift2(cmp)(Elm.Signal.count(s))(dcount);
+      };
+  }
+  function after(t) {
+      t *= 1000;
+      var thread = Elm.Signal.constant(false);
+      setTimeout(function() { Dispatcher.notify(thread.id, true); }, t);
+      return thread;
+  }
+  function before(t) {
+      t *= 1000;
+      var thread = Elm.Signal.constant(true);
+      setTimeout(function() { Dispatcher.notify(thread.id, false); }, t);
+      return thread;
+  }
+  function read(s) {
+      var t = window.Date.parse(s);
+      return isNaN(t) ? ["Nothing"] : ["Just",t];
+  }
+  return {fpsWhen : fpsWhen,
+	  fps : function(t) { return fpsWhen(t)(Elm.Signal.constant(true)); },
+	  every : everyWhen(Elm.Signal.constant(true)),
+	  delay : Elm.Signal.delay,
+	  since : since,
+	  after  : after,
+	  before : before,
+	  hour   : 3600000,
+	  minute : 60000,
+	  second : 1000,
+	  ms     : 1,
+	  inHours   : function(t) { return t / 3600000; },
+	  inMinutes : function(t) { return t / 60000; },
+	  inSeconds : function(t) { return t / 1000; },
+	  inMss     : function(t) { return t; },
+	  toDate : function(t) { return new window.Date(t); },
+	  read   : read
+  };
+
+}();Elm.Window = function() {
+  var dimensions = Elm.Signal.constant(Value.Tuple(window.innerWidth,
+						   window.innerHeight));
+  dimensions.defaultNumberOfKids = 2;
+
+  var width  = Elm.Signal.lift(function(p){return p[1];})(dimensions);
+  width.defaultNumberOfKids = 0;
+  var height = Elm.Signal.lift(function(p){return p[2];})(dimensions);
+  height.defaultNumberOfKids = 0;
+
+  Value.addListener(window, 'resize', function(e) {
+	  var w = document.getElementById('widthChecker').offsetWidth;
+	  var hasListener = Dispatcher.notify(dimensions.id,
+					      Value.Tuple(w, window.innerHeight));
+	  if (!hasListener)
+		this.removeEventListener('resize',arguments.callee,false);
+	});
+  return {dimensions:dimensions,width:width,height:height};
+}();
+
+Elm.Date = function() {
+
+ function dateNow() { return new window.Date; }
+ function readDate(str) {
+     var d = new window.Date(Elm.JavaScript.castStringToJSString(str));
+     if (isNaN(d.getTime())) return ["Nothing"];
+     return ["Just",d];
+ }
+
+ var dayTable = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+ var monthTable = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+		   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]; 
+
+ return {
+     read    : readDate,
+     year    : function(d) { return d.getFullYear(); },
+     month   : function(d) { return [monthTable[d.getMonth()]]; },
+     day     : function(d) { return d.getDate(); },
+     hour    : function(d) { return d.getHours(); },
+     minute  : function(d) { return d.getMinutes(); },
+     second  : function(d) { return d.getSeconds(); },
+     dayOfWeek : function(d) { return [dayTable[d.getDay()]]; },
+     toTime  : function(d) { return d.getTime(); },
+     Mon : ["Mon"], Tue : ["Tue"], Wed : ["Wed"],
+     Thu : ["Thu"], Fri : ["Fri"], Sat : ["Sat"], Sun : ["Sun"],
+     Jan : ["Jan"], Feb : ["Feb"], Mar : ["Mar"], Apr : ["Apr"],
+     May : ["May"], Jun : ["Jun"], Jul : ["Jul"], Aug : ["Aug"],
+     Sep : ["Sep"], Oct : ["Oct"], Nov : ["Nov"], Dec : ["Dec"]
+ };
+
+}();
+
+Value.addListener(document, 'elm_log', function(e) { console.log(e.value); });
+Value.addListener(document, 'elm_title', function(e) {document.title = e.value;});
+Value.addListener(document, 'elm_redirect', function(e) {
+	if (e.value.length > 0) { window.location = e.value; }
+    });
+Value.addListener(document, 'elm_viewport', function(e) {
+	var node = document.getElementById('elm_viewport');
+	if (!node) {
+	    node = document.createElement('meta');
+	    node.id = 'elm_viewport';
+	    node.name = 'viewport';
+	    document.head.appendChild(node);
+	}
+	node.content = e.value;
+	Dispatcher.notify(Elm.Window.dimensions.id,
+			  Value.Tuple(window.innerWidth, window.innerHeight));
+    });
+
+Elm.Prelude = function() {
+    var mod = function(x) { return function(y) {
+	    var r = x % y;
+	    var m = x==0 ? 0 : (y>0 ? (x>=0 ? r : r+y) : -mod(-x)(-y));
+	    return m == y ? 0 : m;
+	}; };
+
+    var min = function(x) { return function(y) { return Math.min(x,y); }; };
+    var max = function(x) { return function(y) { return Math.max(x,y); }; };
+    
+    var flip=function(f){return function(x){return function(y){return f(y)(x);};};};
+    var clamp = function(lo) { return function(hi) {
+	    return function(x) { return Math.min(hi, Math.max(lo, x)); }; 
+	};
+    };
+    var curry = function(f) { return function(x) { return function(y) {
+		return f(["Tuple2",x,y]); }; };
+    };
+    var uncurry = function(f) { return function(p) {
+	    if (p[0] !== "Tuple2") {
+		throw "Function was uncurry'd but was not given a pair.";
+	    }
+	    return f(p[1])(p[2]); };
+    };
+
+    var logBase=function(b){return function(x){return Math.log(x)/Math.log(b);};};
+
+    function readInt(str) {
+	var s = Elm.JavaScript.castStringToJSString(str);
+	var len = s.length;
+	if (len === 0) { return ["Nothing"]; }
+	var start = 0;
+	if (s[0] == '-') {
+	    if (len === 1) { return ["Nothing"]; }
+	    start = 1;
+	}
+	for (var i = start; i < len; ++i) {
+	    if (!Elm.Char.isDigit(s[i])) { return ["Nothing"]; }
+	}
+	return ["Just", parseInt(s)];
+    }
+
+    function readFloat(str) {
+	var s = Elm.JavaScript.castStringToJSString(str);
+	var len = s.length;
+	if (len === 0) { return ["Nothing"]; }
+	var start = 0;
+	if (s[0] == '-') {
+	    if (len === 1) { return ["Nothing"]; }
+	    start = 1;
+	}
+	var dotCount = 0;
+	for (var i = start; i < len; ++i) {
+	    if (Elm.Char.isDigit(s[i])) { continue; }
+	    if (s[i] === '.') {
+		dotCount += 1;
+		if (dotCount <= 1) { continue; }
+	    }
+	    return ["Nothing"];
+	}
+	return ["Just", parseFloat(s)];
+    }
+
+    function compare(x) { return function (y) {
+      if (x instanceof Array && y instanceof Array) {
+	var len = x.length;
+	if (len == y.length) {
+	  for (var i = 1; i < len; ++i) {
+	    var cmp = compare(x[i])(y[i]);
+	    if (cmp[0] === 'EQ') continue;
+	    return cmp;
+	  }
+	  return ['EQ'];
+	}
+	return [ y.length == 1 ? 'GT' : 'LT' ];
+      }
+      return [ x === y ? 'EQ' : (x < y ? 'LT' : 'GT') ];
+     };
+    }
+    return {eq   : Value.eq,
+	    id   : function(x) { return x; },
+	    not  : function(b) { return !b; },
+	    xor  : function(x) { return function(y) { return x != y; }; },
+	    fst  : function(p) { return p[1]; },
+	    snd  : function(p) { return p[2]; },
+	    rem  : function(x) { return function(y) { return x % y; }; },
+	    div  : function(x) { return function(y) { return ~~(x / y); }; },
+	    otherwise : true,
+	    compare : compare,
+	    toFloat : function(x) { return x; },
+	    round : function(n) { return Math.round(n); },
+	    floor : function(n) { return Math.floor(n); },
+	    ceiling : function(n) { return Math.ceil(n); },
+	    truncate : function(n) { return ~~n; },
+	    readInt : readInt,
+	    readFloat : readFloat,
+	    sqrt : Math.sqrt,
+	    abs  : Math.abs,
+	    pi   : Math.PI,
+	    e    : Math.E,
+	    sin  : Math.sin,
+	    cos  : Math.cos,
+	    tan  : Math.tan,
+	    asin : Math.asin,
+	    acos : Math.acos,
+	    atan : Math.atan,
+	    atan2 : function(y) { return function(x) { return Math.atan2(y,x); }; },
+	    mod  : mod,
+	    min  : min,
+	    max  : max,
+	    flip : flip,
+	    clamp : clamp,
+	    curry : curry,
+	    uncurry : uncurry,
+	    logBase : logBase,
+	    Just    : Elm.Maybe.Just,
+	    Nothing : Elm.Maybe.Nothing,
+	    maybe   : Elm.Maybe.maybe,
+	    map     : Elm.List.map,
+	    zip     : Elm.List.zip,
+	    zipWith : Elm.List.zipWith,
+	    filter  : Elm.List.filter,
+	    head    : Elm.List.head,
+	    tail    : Elm.List.tail,
+	    last    : Elm.List.last,
+	    length  : Elm.List.length,
+	    reverse : Elm.List.reverse,
+	    foldr   : Elm.List.foldr,
+	    foldr1  : Elm.List.foldr1,
+	    foldl   : Elm.List.foldl,
+	    foldl1  : Elm.List.foldl1,
+	    and     : Elm.List.and,
+	    or      : Elm.List.or,
+	    all     : Elm.List.all,
+	    any     : Elm.List.any,
+	    sum     : Elm.List.sum,
+	    product : Elm.List.product,
+	    concat  : Elm.List.concat,
+	    concatMap : Elm.List.concatMap,
+	    maximum : Elm.List.maximum,
+	    minimum : Elm.List.minimum,
+	    scanl   : Elm.List.scanl,
+	    scanl1  : Elm.List.scanl1,
+	    take    : Elm.List.take,
+	    drop    : Elm.List.drop,
+	    zip     : Elm.List.zip,
+	    unzip   : Elm.List.unzip,
+	    lift  : Elm.Signal.lift,
+	    lift2 : Elm.Signal.lift2,
+	    lift3 : Elm.Signal.lift3,
+	    lift4 : Elm.Signal.lift4,
+	    lift5 : Elm.Signal.lift5,
+	    lift6 : Elm.Signal.lift6,
+	    lift7 : Elm.Signal.lift7,
+	    lift8 : Elm.Signal.lift8,
+	    foldp : Elm.Signal.foldp,
+	    foldp1 : Elm.Signal.foldp1,
+	    foldp$ : Elm.Signal.foldp$,
+	    constant : Elm.Signal.constant,
+	    merge : Elm.Signal.merge,
+	    merges : Elm.Signal.merges,
+	    mergeEither : Elm.Signal.mergeEither,
+	    count : Elm.Signal.count,
+	    countIf : Elm.Signal.countIf,
+	    average : Elm.Signal.average,
+	    keepIf : Elm.Signal.keepIf,
+	    dropIf : Elm.Signal.dropIf,
+	    keepWhen : Elm.Signal.keepWhen,
+	    dropWhen : Elm.Signal.dropWhen,
+	    dropRepeats : Elm.Signal.dropRepeats,
+	    sampleOn : Elm.Signal.sampleOn,
+	    timestamp : Elm.Signal.timestamp,
+	    timeOf : Elm.Signal.timeOf
+	    };
+
+}();
+
+(function() {
+  var include = function(library) {
+    for (var i in library) {
+	Elm.Prelude[i] = library[i];
+    }
+  };
+  include (Elm.Color);
+  include (Elm.Text);
+  include (Elm.Graphics);
+  include (Elm.Time);
+
+  show = Value.show;
+  
+}());
+
+Elm.Touch = function() {
+
+  function Dict() {
+    this.keys = [];
+    this.values = [];
+
+    this.insert = function(key,value) {
+      this.keys.push(key);
+      this.values.push(value);
+    };
+    this.lookup = function(key) {
+      var i = this.keys.indexOf(key)
+      return i >= 0 ? this.values[i] : {x:0,y:0,t:0};
+    };
+    this.remove = function(key) {
+      var i = this.keys.indexOf(key);
+      if (i < 0) return;
+      var t = this.values[i];
+      this.keys.splice(i,1);
+      this.values.splice(i,1);
+      return t;
+    };
+  }
+
+  var root = Elm.Signal.constant([]),
+      tapTime = 500,
+      hasTap = false,
+      tap = {_:[true],x:[0],y:[0]},
+      dict = new Dict();
+
+  function touch(t) {
+      var r = dict.lookup(t.identifier);
+      return {_ : [true], id: [t.identifier],
+	      x: [t.pageX], y: [t.pageY],
+	      x0: [r.x], y0: [r.y],
+	      t0: [r.t] };
+  }
+
+  function start(e) {
+    dict.insert(e.identifier,{x:e.pageX,y:e.pageY,t:Date.now()});
+  }
+  function end(e) {
+    var t = dict.remove(e.identifier);
+    if (Date.now() - t.t < tapTime) {
+	hasTap = true;
+	tap = {_:[true], x:[t.x], y:[t.y]};
+    }
+  }
+
+  function listen(name, f) {
+    function update(e) {
+      for (var i = e.changedTouches.length; i--; ) { f(e.changedTouches[i]); }
+      var ts = new Array(e.touches.length);
+      for (var i = e.touches.length; i--; ) { ts[i] = touch(e.touches[i]); }
+      var hasListener = Dispatcher.notify(root.id, ts);
+      if (!hasListener) return document.removeEventListener(name, update);
+      e.preventDefault();
+    }
+    Value.addListener(document, name, update);
+  }
+
+  listen("touchstart", start);
+  listen("touchmove", function(_){});
+  listen("touchend", end);
+  listen("touchcancel", end);
+  listen("touchleave", end);
+
+  function dependency(f) {
+      var sig = Elm.Signal.lift(f)(root);
+      root.defaultNumberOfKids += 1;
+      sig.defaultNumberOfKids = 0;
+      return sig;
+  }
+
+  var touches = dependency(function(ts) {
+	  return Elm.JavaScript.castJSArrayToList(ts);
+      });
+  var taps = function() {
+      var sig = dependency(function(_) { return tap; });
+      sig.defaultNumberOfKids = 1;
+      function pred(_) { var b = hasTap; hasTap = false; return b; }
+      var sig2 =  Elm.Signal.keepIf(pred)({_:[true],x:[0],y:[0]})(sig);
+      sig2.defaultNumberOfKids = 0;
+      return sig2;
+  }();
+
+  return { touches: touches, taps: taps };
+}();
+Elm.Dict=function(){
+ var compare = Elm.Prelude.compare;
+ var uncurry = Elm.Prelude.uncurry;
+ var Nothing = Elm.Prelude.Nothing;
+ var Just = Elm.Prelude.Just;
+ var not = Elm.Prelude.not;
+ var eq = Elm.Prelude.eq;
+ var isJust=Elm.Maybe.isJust;
+ var Red_0=['Red'];
+ var Black_1=['Black'];
+ function RBNode_2(a1){
+  return function(a2){
+   return function(a3){
+    return function(a4){
+     return function(a5){
+      return ['RBNode',a1,a2,a3,a4,a5];};};};};}
+ var RBEmpty_3=['RBEmpty'];
+ function min_6(t_42){
+  return function(){
+  switch(t_42[0]){
+   case 'RBEmpty':
+   throw '(min RBEmpty) is not defined';
+   case 'RBNode':
+   switch(t_42[4][0]){
+    case 'RBEmpty':
+    return ['Tuple2',t_42[2],t_42[3]];
+   }
+   return min_6(t_42[4]);
+  }
+  throw "Non-exhaustive pattern match in case";}();}
+ function lookup_7(k_46){
+  return function(t_47){
+   return function(){
+   switch(t_47[0]){
+    case 'RBEmpty':
+    return Nothing;
+    case 'RBNode':
+    return function(){
+    var case12=compare(k_46)(t_47[2]);
+    switch(case12[0]){
+     case 'EQ':
+     return Just(t_47[3]);
+     case 'GT':
+     return lookup_7(k_46)(t_47[5]);
+     case 'LT':
+     return lookup_7(k_46)(t_47[4]);
+    }
+    throw "Non-exhaustive pattern match in case";}();
+   }
+   throw "Non-exhaustive pattern match in case";}();};}
+ function findWithDefault_8(base_52){
+  return function(k_53){
+   return function(t_54){
+    return function(){
+    switch(t_54[0]){
+     case 'RBEmpty':
+     return base_52;
+     case 'RBNode':
+     return function(){
+     var case19=compare(k_53)(t_54[2]);
+     switch(case19[0]){
+      case 'EQ':
+      return t_54[3];
+      case 'GT':
+      return findWithDefault_8(base_52)(k_53)(t_54[5]);
+      case 'LT':
+      return findWithDefault_8(base_52)(k_53)(t_54[4]);
+     }
+     throw "Non-exhaustive pattern match in case";}();
+    }
+    throw "Non-exhaustive pattern match in case";}();};};}
+ function member_9(k_59){
+  return function(t_60){
+   return isJust(lookup_7(k_59)(t_60));};}
+ function rotateLeft_10(t_61){
+  return function(){
+  switch(t_61[0]){
+   case 'RBNode':
+   switch(t_61[5][0]){
+    case 'RBNode':
+    return RBNode_2(t_61[1])(t_61[5][2])(t_61[5][3])(RBNode_2(Red_0)(t_61[2])(t_61[3])(t_61[4])(t_61[5][4]))(t_61[5][5]);
+   }break;
+  }
+  throw 'rotateLeft of a node without enough children';}();}
+ function rotateRight_11(t_71){
+  return function(){
+  switch(t_71[0]){
+   case 'RBNode':
+   switch(t_71[4][0]){
+    case 'RBNode':
+    return RBNode_2(t_71[1])(t_71[4][2])(t_71[4][3])(t_71[4][4])(RBNode_2(Red_0)(t_71[2])(t_71[3])(t_71[4][5])(t_71[5]));
+   }break;
+  }
+  throw 'rotateRight of a node without enough children';}();}
+ function rotateLeftIfNeeded_12(t_81){
+  return function(){
+  switch(t_81[0]){
+   case 'RBNode':
+   switch(t_81[5][0]){
+    case 'RBNode':
+    switch(t_81[5][1][0]){
+     case 'Red':
+     return rotateLeft_10(t_81);
+    }break;
+   }break;
+  }
+  return t_81;}();}
+ function rotateRightIfNeeded_13(t_82){
+  return function(){
+  switch(t_82[0]){
+   case 'RBNode':
+   switch(t_82[4][0]){
+    case 'RBNode':
+    switch(t_82[4][1][0]){
+     case 'Red':
+     switch(t_82[4][4][0]){
+      case 'RBNode':
+      switch(t_82[4][4][1][0]){
+       case 'Red':
+       return rotateRight_11(t_82);
+      }break;
+     }break;
+    }break;
+   }break;
+  }
+  return t_82;}();}
+ function otherColor_14(c_83){
+  return function(){
+  switch(c_83[0]){
+   case 'Black':
+   return Red_0;
+   case 'Red':
+   return Black_1;
+  }
+  throw "Non-exhaustive pattern match in case";}();}
+ function color_flip_15(t_84){
+  return function(){
+  switch(t_84[0]){
+   case 'RBNode':
+   switch(t_84[4][0]){
+    case 'RBNode':
+    switch(t_84[5][0]){
+     case 'RBNode':
+     return RBNode_2(otherColor_14(t_84[1]))(t_84[2])(t_84[3])(RBNode_2(otherColor_14(t_84[4][1]))(t_84[4][2])(t_84[4][3])(t_84[4][4])(t_84[4][5]))(RBNode_2(otherColor_14(t_84[5][1]))(t_84[5][2])(t_84[5][3])(t_84[5][4])(t_84[5][5]));
+    }break;
+   }break;
+  }
+  throw 'color_flip called on a RBEmpty or RBNode with a RBEmpty child';}();}
+ function color_flipIfNeeded_16(t_98){
+  return function(){
+  switch(t_98[0]){
+   case 'RBNode':
+   switch(t_98[4][0]){
+    case 'RBNode':
+    switch(t_98[4][1][0]){
+     case 'Red':
+     switch(t_98[5][0]){
+      case 'RBNode':
+      switch(t_98[5][1][0]){
+       case 'Red':
+       return color_flip_15(t_98);
+      }break;
+     }break;
+    }break;
+   }break;
+  }
+  return t_98;}();}
+ function fixUp_17(t_99){
+  return color_flipIfNeeded_16(rotateRightIfNeeded_13(rotateLeftIfNeeded_12(t_99)));}
+ function ensureBlackRoot_18(t_100){
+  return function(){
+  switch(t_100[0]){
+   case 'RBNode':
+   switch(t_100[1][0]){
+    case 'Red':
+    return RBNode_2(Black_1)(t_100[2])(t_100[3])(t_100[4])(t_100[5]);
+   }break;
+  }
+  return t_100;}();}
+ function insert_19(k_105){
+  return function(v_106){
+   return function(t_107){
+    return function(){
+     function ins_108(t_109){
+      return function(){
+      switch(t_109[0]){
+       case 'RBEmpty':
+       return RBNode_2(Red_0)(k_105)(v_106)(RBEmpty_3)(RBEmpty_3);
+       case 'RBNode':
+       return function(){
+        var h_115=function(){
+        var case114=compare(k_105)(t_109[2]);
+        switch(case114[0]){
+         case 'EQ':
+         return RBNode_2(t_109[1])(t_109[2])(v_106)(t_109[4])(t_109[5]);
+         case 'GT':
+         return RBNode_2(t_109[1])(t_109[2])(t_109[3])(t_109[4])(ins_108(t_109[5]));
+         case 'LT':
+         return RBNode_2(t_109[1])(t_109[2])(t_109[3])(ins_108(t_109[4]))(t_109[5]);
+        }
+        throw "Non-exhaustive pattern match in case";}();
+        return fixUp_17(h_115);}();
+      }
+      throw "Non-exhaustive pattern match in case";}();}
+     return ensureBlackRoot_18(ins_108(t_107));}();};};}
+ function singleton_20(k_116){
+  return function(v_117){
+   return insert_19(k_116)(v_117)(RBEmpty_3);};}
+ function isRed_21(t_118){
+  return function(){
+  switch(t_118[0]){
+   case 'RBNode':
+   switch(t_118[1][0]){
+    case 'Red':
+    return true;
+   }break;
+  }
+  return false;}();}
+ function isRedLeft_22(t_119){
+  return function(){
+  switch(t_119[0]){
+   case 'RBNode':
+   switch(t_119[4][0]){
+    case 'RBNode':
+    switch(t_119[4][1][0]){
+     case 'Red':
+     return true;
+    }break;
+   }break;
+  }
+  return false;}();}
+ function isRedLeftLeft_23(t_120){
+  return function(){
+  switch(t_120[0]){
+   case 'RBNode':
+   switch(t_120[4][0]){
+    case 'RBNode':
+    switch(t_120[4][4][0]){
+     case 'RBNode':
+     switch(t_120[4][4][1][0]){
+      case 'Red':
+      return true;
+     }break;
+    }break;
+   }break;
+  }
+  return false;}();}
+ function isRedRight_24(t_121){
+  return function(){
+  switch(t_121[0]){
+   case 'RBNode':
+   switch(t_121[5][0]){
+    case 'RBNode':
+    switch(t_121[5][1][0]){
+     case 'Red':
+     return true;
+    }break;
+   }break;
+  }
+  return false;}();}
+ function isRedRightLeft_25(t_122){
+  return function(){
+  switch(t_122[0]){
+   case 'RBNode':
+   switch(t_122[5][0]){
+    case 'RBNode':
+    switch(t_122[5][4][0]){
+     case 'RBNode':
+     switch(t_122[5][4][1][0]){
+      case 'Red':
+      return true;
+     }break;
+    }break;
+   }break;
+  }
+  return false;}();}
+ function moveRedLeft_26(t_123){
+  return function(){
+   var t__124=color_flip_15(t_123);
+   return function(){
+   switch(t__124[0]){
+    case 'RBNode':
+    return function(){
+    switch(t__124[5][0]){
+     case 'RBNode':
+     switch(t__124[5][4][0]){
+      case 'RBNode':
+      switch(t__124[5][4][1][0]){
+       case 'Red':
+       return color_flip_15(rotateLeft_10(RBNode_2(t__124[1])(t__124[2])(t__124[3])(t__124[4])(rotateRight_11(t__124[5]))));
+      }break;
+     }break;
+    }
+    return t__124;}();
+   }
+   return t__124;}();}();}
+ function moveRedRight_27(t_130){
+  return function(){
+   var t__131=color_flip_15(t_130);
+   return (isRedLeftLeft_23(t__131)?color_flip_15(rotateRight_11(t__131)):t__131);}();}
+ function moveRedLeftIfNeeded_28(t_132){
+  return ((not(isRedLeft_22(t_132))&&not(isRedLeftLeft_23(t_132)))?moveRedLeft_26(t_132):t_132);}
+ function moveRedRightIfNeeded_29(t_133){
+  return ((not(isRedRight_24(t_133))&&not(isRedRightLeft_25(t_133)))?moveRedRight_27(t_133):t_133);}
+ function deleteMin_30(t_134){
+  return function(){
+   function del_135(t_136){
+    return function(){
+    switch(t_136[0]){
+     case 'RBNode':
+     switch(t_136[4][0]){
+      case 'RBEmpty':
+      return RBEmpty_3;
+     }break;
+    }
+    return function(){
+    var case198=moveRedLeftIfNeeded_28(t_136);
+    switch(case198[0]){
+     case 'RBEmpty':
+     return RBEmpty_3;
+     case 'RBNode':
+     return fixUp_17(RBNode_2(case198[1])(case198[2])(case198[3])(del_135(case198[4]))(case198[5]));
+    }
+    throw "Non-exhaustive pattern match in case";}();}();}
+   return ensureBlackRoot_18(del_135(t_134));}();}
+ function remove_31(k_142){
+  return function(t_143){
+   return function(){
+    function eq_and_noRightNode_144(t_150){
+     return function(){
+     switch(t_150[0]){
+      case 'RBNode':
+      switch(t_150[5][0]){
+       case 'RBEmpty':
+       return eq(k_142,t_150[2]);
+      }break;
+     }
+     return false;}();}
+    function eq_145(t_152){
+     return function(){
+     switch(t_152[0]){
+      case 'RBNode':
+      return eq(k_142,t_152[2]);
+     }
+     return false;}();}
+    function delLT_146(t_154){
+     return function(){
+     var case216=moveRedLeftIfNeeded_28(t_154);
+     switch(case216[0]){
+      case 'RBEmpty':
+      throw 'delLT on RBEmpty';
+      case 'RBNode':
+      return fixUp_17(RBNode_2(case216[1])(case216[2])(case216[3])(del_149(case216[4]))(case216[5]));
+     }
+     throw "Non-exhaustive pattern match in case";}();}
+    function delEQ_147(t_160){
+     return function(){
+     switch(t_160[0]){
+      case 'RBEmpty':
+      throw 'delEQ called on a RBEmpty';
+      case 'RBNode':
+      return function(){
+       var Tuple2$k_v__164=min_6(t_160[5]);
+       var k__165=function(){
+       switch(Tuple2$k_v__164[0]){
+        case 'Tuple2':
+        return Tuple2$k_v__164[1];
+       }
+       throw "Non-exhaustive pattern match in case";}();
+       var v__166=function(){
+       switch(Tuple2$k_v__164[0]){
+        case 'Tuple2':
+        return Tuple2$k_v__164[2];
+       }
+       throw "Non-exhaustive pattern match in case";}();
+       return fixUp_17(RBNode_2(t_160[1])(k__165)(v__166)(t_160[4])(deleteMin_30(t_160[5])));}();
+     }
+     throw "Non-exhaustive pattern match in case";}();}
+    function delGT_148(t_171){
+     return function(){
+     switch(t_171[0]){
+      case 'RBEmpty':
+      throw 'delGT called on a RBEmpty';
+      case 'RBNode':
+      return fixUp_17(RBNode_2(t_171[1])(t_171[2])(t_171[3])(t_171[4])(del_149(t_171[5])));
+     }
+     throw "Non-exhaustive pattern match in case";}();}
+    function del_149(t_177){
+     return function(){
+     switch(t_177[0]){
+      case 'RBEmpty':
+      return RBEmpty_3;
+      case 'RBNode':
+      return ((compare(k_142)(t_177[2])[0] === 'LT')?delLT_146(t_177):function(){
+       var u_179=(isRedLeft_22(t_177)?rotateRight_11(t_177):t_177);
+       return (eq_and_noRightNode_144(u_179)?u_179[4]:function(){
+        var t__180=moveRedRightIfNeeded_29(t_177);
+        return (eq_145(t__180)?delEQ_147(t__180):delGT_148(t__180));}());}());
+     }
+     throw "Non-exhaustive pattern match in case";}();}
+    return (member_9(k_142)(t_143)?ensureBlackRoot_18(del_149(t_143)):t_143);}();};}
+ function map_32(f_181){
+  return function(t_182){
+   return function(){
+   switch(t_182[0]){
+    case 'RBEmpty':
+    return RBEmpty_3;
+    case 'RBNode':
+    return RBNode_2(t_182[1])(t_182[2])(f_181(t_182[3]))(map_32(f_181)(t_182[4]))(map_32(f_181)(t_182[5]));
+   }
+   throw "Non-exhaustive pattern match in case";}();};}
+ function foldl_33(f_188){
+  return function(acc_189){
+   return function(t_190){
+    return function(){
+    switch(t_190[0]){
+     case 'RBEmpty':
+     return acc_189;
+     case 'RBNode':
+     return foldl_33(f_188)(f_188(t_190[2])(t_190[3])(foldl_33(f_188)(acc_189)(t_190[4])))(t_190[5]);
+    }
+    throw "Non-exhaustive pattern match in case";}();};};}
+ function foldr_34(f_195){
+  return function(acc_196){
+   return function(t_197){
+    return function(){
+    switch(t_197[0]){
+     case 'RBEmpty':
+     return acc_196;
+     case 'RBNode':
+     return foldr_34(f_195)(f_195(t_197[2])(t_197[3])(foldr_34(f_195)(acc_196)(t_197[5])))(t_197[4]);
+    }
+    throw "Non-exhaustive pattern match in case";}();};};}
+ function union_35(t1_202){
+  return function(t2_203){
+   return foldl_33(insert_19)(t2_203)(t1_202);};}
+ function intersect_36(t1_204){
+  return function(t2_205){
+   return foldl_33(function(k_206){
+    return function(v_207){
+     return function(t_208){
+      return (member_9(k_206)(t2_205)?insert_19(k_206)(v_207)(t_208):t_208);};};})(empty_4)(t1_204);};}
+ function diff_37(t1_209){
+  return function(t2_210){
+   return foldl_33(function(k_211){
+    return function(v_212){
+     return function(t_213){
+      return remove_31(k_211)(t_213);};};})(t1_209)(t2_210);};}
+ function keys_38(t_214){
+  return foldr_34(function(k_215){
+   return function(v_216){
+    return function(acc_217){
+     return ['Cons',k_215,acc_217];};};})(['Nil'])(t_214);}
+ function values_39(t_218){
+  return foldr_34(function(k_219){
+   return function(v_220){
+    return function(acc_221){
+     return ['Cons',v_220,acc_221];};};})(['Nil'])(t_218);}
+ function toList_40(t_222){
+  return foldr_34(function(k_223){
+   return function(v_224){
+    return function(acc_225){
+     return ['Cons',['Tuple2',k_223,v_224],acc_225];};};})(['Nil'])(t_222);}
+ function fromList_41(assocs_226){
+  return Elm.List.foldl(uncurry(insert_19))(empty_4)(assocs_226);}
+ var empty_4=RBEmpty_3;
+ return {$op : {},
+ empty:empty_4,
+ lookup:lookup_7,
+ findWithDefault:findWithDefault_8,
+ member:member_9,
+ insert:insert_19,
+ singleton:singleton_20,
+ remove:remove_31,
+ map:map_32,
+ foldl:foldl_33,
+ foldr:foldr_34,
+ union:union_35,
+ intersect:intersect_36,
+ diff:diff_37,
+ keys:keys_38,
+ values:values_39,
+ toList:toList_40,
+ fromList:fromList_41};}();
+
+Elm.Set=function(){
+ var empty_0=Elm.Dict.empty;
+ var remove_3=Elm.Dict.remove;
+ var member_4=Elm.Dict.member;
+ var union_5=Elm.Dict.union;
+ var intersect_6=Elm.Dict.intersect;
+ var diff_7=Elm.Dict.diff;
+ var toList_8=Elm.Dict.keys;
+ var fromList_9=Elm.List.foldl(function(k_15){
+  return function(t_16){
+   return Elm.Dict.insert(k_15)(["Tuple0"])(t_16);};})(empty_0);
+ function singleton_1(k_13){
+  return Elm.Dict.singleton(k_13)(["Tuple0"]);};
+ function insert_2(k_14){
+  return Elm.Dict.insert(k_14)(["Tuple0"]);};
+ function foldl_10(f_17){
+  return Elm.Dict.foldl(function(k_18){
+   return function(v_19){
+    return function(b_20){
+     return f_17(k_18)(b_20);};};});};
+ function foldr_11(f_21){
+  return Elm.Dict.foldr(function(k_22){
+   return function(v_23){
+    return function(b_24){
+     return f_21(k_22)(b_24);};};});};
+ function map_12(f_25){
+  return function(t_26){
+   return function(x){
+    return fromList_9(Elm.List.map(f_25)(x));}(toList_8(t_26));};};
+ return {empty:empty_0,singleton:singleton_1,insert:insert_2,remove:remove_3,member:member_4,union:union_5,intersect:intersect_6,diff:diff_7,toList:toList_8,fromList:fromList_9,foldl:foldl_10,foldr:foldr_11,map:map_12};}();
+
+(function() {
+try{
+
+var $op={};
+for(this['i'] in Elm){eval('var '+this['i']+'=Elm[this.i];');}
+if (Elm.Automaton) throw "Module name collision, 'Automaton' is already defined."; 
+Elm.Automaton=function(){
+ try{
+  if (!(Elm.Prelude instanceof Object)) throw 'module not found';
+ } catch(e) {
+  throw ("Module 'Prelude' is missing. Compile with --make flag or load missing module in a separate JavaScript file.");
+ }
+ var hiddenVars={};
+ for (this['i'] in Elm.Prelude) {
+  if (hiddenVars[this['i']]) continue;
+  eval('var ' + this['i'] + ' = Elm.Prelude[this.i];');}
+ function Automaton_0(a1){
+  return ["Automaton",a1];}
+ var Listen_8=["Listen"];
+ var Ignore_9=["Ignore"];
+ function DragFrom_10(a1){
+  return ["DragFrom",a1];}
+ $op['>>>'] = function(a1_24){
+  return function(a2_25){
+   return function(){
+    var Automaton$m1_26=a1_24;
+    var m1_27=function(){
+    switch(Automaton$m1_26[0]){
+     case "Automaton":
+     return Automaton$m1_26[1];
+    }
+    throw "Non-exhaustive pattern match in case";}();
+    var Automaton$m2_28=a2_25;
+    var m2_29=function(){
+    switch(Automaton$m2_28[0]){
+     case "Automaton":
+     return Automaton$m2_28[1];
+    }
+    throw "Non-exhaustive pattern match in case";}();
+    return Automaton_0(function(a_32){
+     return function(){
+      var Tuple2$bm1__33=m1_27(a_32);
+      var b_34=function(){
+      switch(Tuple2$bm1__33[0]){
+       case "Tuple2":
+       return Tuple2$bm1__33[1];
+      }
+      throw "Non-exhaustive pattern match in case";}();
+      var m1__35=function(){
+      switch(Tuple2$bm1__33[0]){
+       case "Tuple2":
+       return Tuple2$bm1__33[2];
+      }
+      throw "Non-exhaustive pattern match in case";}();
+      return function(){
+       var Tuple2$cm2__40=m2_29(b_34);
+       var c_41=function(){
+       switch(Tuple2$cm2__40[0]){
+        case "Tuple2":
+        return Tuple2$cm2__40[1];
+       }
+       throw "Non-exhaustive pattern match in case";}();
+       var m2__42=function(){
+       switch(Tuple2$cm2__40[0]){
+        case "Tuple2":
+        return Tuple2$cm2__40[2];
+       }
+       throw "Non-exhaustive pattern match in case";}();
+       return ["Tuple2",c_41,$op['>>>'](m1__35)(m2__42)];}();}();});}();};};
+ $op['<<<'] = function(a2_47){
+  return function(a1_48){
+   return $op['>>>'](a1_48)(a2_47);};};
+ $op['^>>'] = function(f_49){
+  return function(a_50){
+   return $op['>>>'](pure_4(f_49))(a_50);};};
+ $op['>>^'] = function(a_51){
+  return function(f_52){
+   return $op['>>>'](a_51)(pure_4(f_52));};};
+ $op['^<<'] = function(f_53){
+  return function(a_54){
+   return $op['>>>'](a_54)(pure_4(f_53));};};
+ $op['<<^'] = function(a_55){
+  return function(f_56){
+   return $op['>>>'](pure_4(f_56))(a_55);};};
+ var count_7=init_5(0)(function(__84){
+  return function(c_85){
+   return (1+c_85);};});
+ function run_1(Automaton$m0_14){
+  return function(input_15){
+   return function(){
+   switch(Automaton$m0_14[0]){
+    case "Automaton":
+    return lift(fst)(foldp$(function(a_17){
+     return function(Tuple2$bAutomaton$m_18){
+      return function(){
+      switch(Tuple2$bAutomaton$m_18[0]){
+       case "Tuple2":
+       switch(Tuple2$bAutomaton$m_18[2][0]){
+        case "Automaton":
+        return Tuple2$bAutomaton$m_18[2][1](a_17);
+       }break;
+      }
+      throw "Non-exhaustive pattern match in case";}();};})(Automaton$m0_14[1])(input_15));
+   }
+   throw "Non-exhaustive pattern match in case";}();};}
+ function step_2(Automaton$m_21){
+  return function(a_22){
+   return function(){
+   switch(Automaton$m_21[0]){
+    case "Automaton":
+    return Automaton$m_21[1](a_22);
+   }
+   throw "Non-exhaustive pattern match in case";}();};}
+ function combine_3(autos_57){
+  return Automaton_0(function(a_58){
+   return function(){
+    var Tuple2$bsautos__59=unzip(map(function(Automaton$m_62){
+     return function(){
+     switch(Automaton$m_62[0]){
+      case "Automaton":
+      return Automaton$m_62[1](a_58);
+     }
+     throw "Non-exhaustive pattern match in case";}();})(autos_57));
+    var bs_60=function(){
+    switch(Tuple2$bsautos__59[0]){
+     case "Tuple2":
+     return Tuple2$bsautos__59[1];
+    }
+    throw "Non-exhaustive pattern match in case";}();
+    var autos__61=function(){
+    switch(Tuple2$bsautos__59[0]){
+     case "Tuple2":
+     return Tuple2$bsautos__59[2];
+    }
+    throw "Non-exhaustive pattern match in case";}();
+    return ["Tuple2",bs_60,combine_3(autos__61)];}();});}
+ function pure_4(f_68){
+  return Automaton_0(function(x_69){
+   return ["Tuple2",f_68(x_69),pure_4(f_68)];});}
+ function init_5(s_70){
+  return function(step_71){
+   return Automaton_0(function(a_72){
+    return function(){
+     var s__73=step_71(a_72)(s_70);
+     return ["Tuple2",s__73,init_5(s__73)(step_71)];}();});};}
+ function init__6(s_74){
+  return function(step_75){
+   return Automaton_0(function(a_76){
+    return function(){
+     var Tuple2$bs__77=step_75(a_76)(s_74);
+     var b_78=function(){
+     switch(Tuple2$bs__77[0]){
+      case "Tuple2":
+      return Tuple2$bs__77[1];
+     }
+     throw "Non-exhaustive pattern match in case";}();
+     var s__79=function(){
+     switch(Tuple2$bs__77[0]){
+      case "Tuple2":
+      return Tuple2$bs__77[2];
+     }
+     throw "Non-exhaustive pattern match in case";}();
+     return ["Tuple2",b_78,init__6(s__79)(step_75)];}();});};}
+ function vecSub_11(Tuple2$x1y1_86){
+  return function(Tuple2$x2y2_87){
+   return function(){
+   switch(Tuple2$x1y1_86[0]){
+    case "Tuple2":
+    return function(){
+    switch(Tuple2$x2y2_87[0]){
+     case "Tuple2":
+     return ["Tuple2",(Tuple2$x1y1_86[1]-Tuple2$x2y2_87[1]),(Tuple2$x1y1_86[2]-Tuple2$x2y2_87[2])];
+    }
+    throw "Non-exhaustive pattern match in case";}();
+   }
+   throw "Non-exhaustive pattern match in case";}();};}
+ function stepDrag_12(Tuple2$presspos_92){
+  return function(Tuple2$dsform_93){
+   return function(){
+   switch(Tuple2$presspos_92[0]){
+    case "Tuple2":
+    return function(){
+    switch(Tuple2$dsform_93[0]){
+     case "Tuple2":
+     return function(){
+      function wrap_98(ds__99){
+       return ["Tuple2",Tuple2$dsform_93[2],["Tuple2",ds__99,Tuple2$dsform_93[2]]];}
+      return function(){
+      switch(Tuple2$dsform_93[1][0]){
+       case "DragFrom":
+       return (Tuple2$presspos_92[1]?["Tuple2",uncurry(move)(vecSub_11(Tuple2$presspos_92[2])(Tuple2$dsform_93[1][1]))(Tuple2$dsform_93[2]),["Tuple2",DragFrom_10(Tuple2$dsform_93[1][1]),Tuple2$dsform_93[2]]]:function(){
+        var form__101=uncurry(move)(vecSub_11(Tuple2$presspos_92[2])(Tuple2$dsform_93[1][1]))(Tuple2$dsform_93[2]);
+        return ["Tuple2",form__101,["Tuple2",Listen_8,form__101]];}());
+       case "Ignore":
+       return wrap_98((Tuple2$presspos_92[1]?Ignore_9:Listen_8));
+       case "Listen":
+       return wrap_98((not(Tuple2$presspos_92[1])?Listen_8:(isWithin(Tuple2$presspos_92[2])(Tuple2$dsform_93[2])?DragFrom_10(Tuple2$presspos_92[2]):Ignore_9)));
+      }
+      throw "Non-exhaustive pattern match in case";}();}();
+    }
+    throw "Non-exhaustive pattern match in case";}();
+   }
+   throw "Non-exhaustive pattern match in case";}();};}
+ function draggable_13(form_102){
+  return init__6(["Tuple2",Listen_8,form_102])(stepDrag_12);}
+ return {$op : {'>>>' : $op['>>>'], '<<<' : $op['<<<'], '^>>' : $op['^>>'], '>>^' : $op['>>^'], '^<<' : $op['^<<'], '<<^' : $op['<<^']},
+ run:run_1,
+ step:step_2,
+ combine:combine_3,
+ pure:pure_4,
+ init:init_5,
+ init$:init__6,
+ count:count_7,
+ draggable:draggable_13};}();
+Elm.main=function(){
+ return Elm.Automaton.main;};
+} catch (e) {
+Elm.main=function() {
+var msg = ('<br/><h2>Your browser may not be supported. Are you using a modern browser?</h2>' + '<br/><span style="color:grey">Runtime Error in Automaton module:<br/>' + e + '</span>');
+document.body.innerHTML = Elm.Text.monospace(msg);throw e;};}}());
