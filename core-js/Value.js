@@ -40,7 +40,7 @@ var Value = function(){
   function makeSpaces(s) {
     if (s.length == 0) { return s; }
     var arr = s.split('');
-    if (arr[0] == ' ') { arr[0] = "&nbsp;" }      
+    if (arr[0] == ' ') { arr[0] = "&nbsp;" }
     for (var i = arr.length; --i; ) {
       if (arr[i][0] == ' ' && arr[i-1] == ' ') {
         arr[i-1] = arr[i-1] + arr[i];
@@ -93,11 +93,11 @@ var Value = function(){
     t.innerHTML = txt;
     t.style.textAlign = 'left';
     if (w > 0) { t.style.width  = w + "px"; }
-    
+
     t.style.visibility = "hidden";
     t.style.styleFloat = "left";
     t.style.cssFloat   = "left";
-    
+
     document.body.appendChild(t);
     var cStyle = window.getComputedStyle(t,null);
     var realW = cStyle.getPropertyValue("width").slice(0,-2) - 0;
@@ -109,11 +109,11 @@ var Value = function(){
 
   function getSize(e) {
     var t = e.cloneNode(true);
-    
+
     t.style.visibility = "hidden";
     t.style.styleFloat = "left";
     t.style.cssFloat   = "left";
-    
+
     document.body.appendChild(t);
     var w = t.offsetWidth;
     var h = t.offsetHeight;
@@ -124,11 +124,11 @@ var Value = function(){
 
   function getExcess(e) {
     var t = e.cloneNode(true);
-    
+
     t.style.visibility = "hidden";
     t.style.styleFloat = "left";
     t.style.cssFloat   = "left";
-    
+
     document.body.appendChild(t);
     var ow = t.offsetWidth;
     var oh = t.offsetHeight;
@@ -251,7 +251,7 @@ var Value = function(){
     }
     return out;
   };
-  
+
   function wrap(elem) {
       var p = Value.getSize(elem);
       return ["Element", Guid.guid(), ["EHtml",elem],

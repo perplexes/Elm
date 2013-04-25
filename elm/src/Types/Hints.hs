@@ -42,7 +42,7 @@ elements =
       , "rightedText"  -: text ==> element
       , "centeredText"  -: text ==> element
       , "justifiedText" -: text ==> element
-      , "asText" -:: a ==> element 
+      , "asText" -:: a ==> element
       , "collage" -: int ==> int ==> listOf form ==> element
       , "fittedImage" -: int ==> int ==> string ==> element
       ]
@@ -98,7 +98,7 @@ casts =
   , "castElementToJSElement" -: element ==> jsElement
   , "castJSStringToString"   -: jsString ==> string
   , "castStringToJSString"   -: string ==> jsString
-  , "castJSNumberToFloat"    -: jsNumber ==> float 
+  , "castJSNumberToFloat"    -: jsNumber ==> float
   , "castFloatToJSNumber"    -: float ==> jsNumber
   ]
 
@@ -149,7 +149,7 @@ sig n name = (,) name $ Forall [1..n] [] (fn ts ==> fn (map signalOf ts))
 
 signals = prefix "Signal"
     [ sig 1 "constant"
-    , sig 2 "lift" 
+    , sig 2 "lift"
     ] ++ map lyft [2..8] ++ [
       "<~"        -:: (a ==> b) ==> signalOf a ==> signalOf b
     , "~"         -:: signalOf (a ==> b) ==> signalOf a ==> signalOf b
@@ -184,7 +184,7 @@ http = prefix "HTTP"
     where request  t = ADT "Request"  [t]
           response t = ADT "Response" [t]
 
-concreteSignals = 
+concreteSignals =
   [ "Random.inRange"    -: int ==> int ==> signalOf int
   , "Random.randomize"  -:: int ==> int ==> signalOf a ==> signalOf int
   , "Window.dimensions" -: signalOf point
@@ -297,7 +297,7 @@ chars = prefix "Char" (classify ++ convert1 ++ convert2)
         convert1 =  hasType (char ==> char)
                     ["toUpper","toLower","toLocaleUpper","toLocaleLower"]
         convert2 = [ "toCode" -: char ==> int, "fromCode" -: int ==> char ]
-  
+
 
 --------  Polymorphic Functions  --------
 
@@ -315,7 +315,7 @@ funcs =
     , "$"    -:: (a ==> b) ==> a ==> b
     , ":"       -:: a ==> listOf a ==> listOf a
     , (,) "++" . Forall [0,1] [ ctx "++" $ VarT 0 :<: appendable (VarT 1) ] $ VarT 0 ==> VarT 0 ==> VarT 0
-    , "Cons"    -:: a ==> listOf a ==> listOf a 
+    , "Cons"    -:: a ==> listOf a ==> listOf a
     , "Nil"     -:: listOf a
     , "Just"    -:: a ==> maybeOf a
     , "Nothing" -:: maybeOf a
