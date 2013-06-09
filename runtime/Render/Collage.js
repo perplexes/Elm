@@ -113,9 +113,17 @@ function drawShape(redo, ctx, style, path) {
 }
 
 function drawImage(redo, ctx, form) {
-    var img = new Image();
-    img.onload = redo;
-    img.src = fromString(form._3);
+    var img;
+
+    if(typeof form.img == "undefined"){
+      form.img = new Image();
+      img = form.img;
+      img.onload = redo;
+      img.src = fromString(form._3);
+    } else {
+      img = form.img;
+    }
+    
     var w = form._0,
         h = form._1,
         pos = form._2,
