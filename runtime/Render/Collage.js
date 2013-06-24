@@ -112,18 +112,18 @@ function drawShape(redo, ctx, style, path) {
     ctx.fill();
 }
 
+window.cache = {};
+
 function drawImage(redo, ctx, form) {
     var img;
+    var src = fromString(form._3);
 
-    if(typeof form.img == "undefined"){
-      form.img = new Image();
-      img = form.img;
+    if(typeof (img = window.cache[src]) == 'undefined'){
+      cache[src] = img = new Image();
       img.onload = redo;
-      img.src = fromString(form._3);
-    } else {
-      img = form.img;
+      img.src = src;
     }
-    
+
     var w = form._0,
         h = form._1,
         pos = form._2,
@@ -301,7 +301,7 @@ function updateTracker(w,h,div) {
             container.style.overflow = 'hidden';
             container.style.position = 'absolute';
             addTransform(container.style, 'scaleY(-1)');
-            
+
             var kid = kids[i];
             kid ? div.insertBefore(container, kid)
                 : div.appendChild(container);
