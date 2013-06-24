@@ -18,7 +18,7 @@ import System.Exit
 import System.FilePath
 
 checkMistakes :: (Data t, Data v) => Module t v -> Either String (Module t v)
-checkMistakes modul@(Module name ex im stmts) = 
+checkMistakes modul@(Module name ex im stmts) =
   case mistakes stmts of
     m:ms -> Left (unlines (m:ms))
     []   -> return modul
@@ -66,11 +66,11 @@ readDeps seen root = do
         do rest <- mapM (readDeps seen' . toFilePath) newDeps
            return ((name, realDeps) : concat rest)
         where
-          realDeps = filter (`notElem` builtIns) deps
+          realDeps = filter (\d -> d `notElem` builtIns && not (isNative d)) deps
           newDeps = filter (\d -> d `notElem` seen && not (isNative d)) realDeps
           seen' = root : seen ++ newDeps
           builtIns = Map.keys Libs.libraries
-                       
+
 
 isNative name = takeWhile (/='.') name == "Native"
 
