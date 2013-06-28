@@ -112,16 +112,20 @@ function drawShape(redo, ctx, style, path) {
     ctx.fill();
 }
 
-window.cache = {};
+var cache = {};
 
 function drawImage(redo, ctx, form) {
     var img;
-    var src = fromString(form._3);
+    if(form._3.ctor == 'FBuffer'){
+        img = form._3._0;
+    } else {
+        var src = fromString(form._3);
 
-    if(typeof (img = window.cache[src]) == 'undefined'){
-      cache[src] = img = new Image();
-      img.onload = redo;
-      img.src = src;
+        if(typeof (img = window.cache[src]) == 'undefined'){
+          cache[src] = img = new Image();
+          img.onload = redo;
+          img.src = src;
+        }
     }
 
     var w = form._0,
